@@ -11,13 +11,12 @@
 
 import random
 import numpy as np
-import matplotlib.pyplot as plt
-import patsy
-import pandas as pd
-import statsmodels.api as sm
-from probability import distr, draw
+from probability import draw
 import math
-#from master_file
+
+T = 10
+outcome_space = 2
+
 
 class Bidder(object):
 
