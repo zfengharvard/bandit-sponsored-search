@@ -1,11 +1,12 @@
 ############ 
 # Implements Bidder Class 
 # Includes Functions: 
-# - receive_reward
-# - compute_bid
+# - prob_outcome
 # - compute_utility
-# - exp3
-# - win_exp3 
+# - weights_update_winexp
+# - bidding
+# - loss_update_exp3
+# - loss_update_winexp
 ############ 
 
 import random
@@ -17,9 +18,6 @@ import statsmodels.api as sm
 from probability import distr, draw
 import math
 #from master_file
-
-T = 10
-outcome_space = 2
 
 class Bidder(object):
 
@@ -89,6 +87,4 @@ class Bidder(object):
         return self.pi
     
 
-#learner = Bidder(1,0.1)
-#print [b*learner.eps for b in range(0,learner.bid_space-1)]
 
