@@ -1,7 +1,9 @@
 ###################
 # Implements GSP class
 # Includes Functions:
-# - compute: return allocation and payment
+# - compute: return allocated slot and per-click-payment
+# - alloc_func: return allocation function for the learner
+# - payment_func: return payment function
 ###################
 
 
@@ -10,59 +12,107 @@ import random
 import math
 
 
-class GSP():
+class GSP(object):
     """
     Implements the generalized second price auction mechanism.
     """
-    def __init__(self, slot_clicks, reserve, bids, slot):
-        self.slot_clicks = slot_clicks
-        self.reserve = reserve
-        self.bids = bids
-        self.slot = slot
+    ##########
+    # ctr: a vector of click-through-rate
+    # r: rankscore reserve
+    # b: a vector of the bids from bidders
+    # s: a vector of the scores associated with each bidder
+    # m: number of slots
+    # n: number of bidders
     
-    
+    def __init__(self, ctr, r, b, s, m, n):
+        self.ctr = ctr
+        self.r = r
+        self.b = b
+        self.s = s
+        self.m = m
+        self.n = n
+        
+        
     def compute(self):
-        """
-        Given info about the setting (clicks for each slot, and self.reserve price),
-        and self.bids (list of (id, bid) tuples), compute the following:
-          allocation:  list of the occupant in each slot
-              len(allocation) = min(len(self.bids), len(self.slot_clicks))
-          per_click_payments: list of payments for each slot
-              len(per_click_payments) = len(allocation)
-
-        If any self.bids are below the self.reserve price, they are ignored.
-
-        Returns a pair of lists (allocation, per_click_payments):
-         - allocation is a list of the ids of the bidders in each slot
-            (in order)
-         - per_click_payments is the corresponding payments.
-        """
-        valid = lambda (a, bid): bid >= self.reserve
-        valid_self.bids = filter(valid, self.bids)
-
-        rev_cmp_self.bids = lambda (a1, b1), (a2, b2): cmp(b2, b1)
-        # shuffle first to make sure we don't have any bias for lower or
-        # higher ids
-        random.shuffle(valid_self.bids)
-        valid_self.bids.sort(rev_cmp_self.bids)
-
-        num_slots = len(self.slot_clicks)
-        allocated_self.bids = valid_self.bids[:num_slots]
-        if len(allocated_self.bids) == 0:
+        rankscores = zip(range(0,self.n), [x*y for x,y in zip(self.b, self.s)])
+        valid = lambda (a, bid): bid >= self.r
+        valid_bids = filter(valid, rankscores)
+        rev_cmp_bids = lambda (a1, b1), (a2, b2): cmp(b2, b1)
+        # sort the valid (weighted) rankscores decreasingly
+        valid_bids.sort(rev_cmp_bids)
+        allocated_bids = valid_bids[:self.m]
+        if len(allocated_bids) == 0:
             return ([], [])
-
-        (allocation, just_self.bids) = zip(*allocated_self.bids)
-
-        # Each pays the bid below them, or the self.reserve
-        per_click_payments = list(just_self.bids[1:])  # first num_slots - 1 slots
-        # figure out whether the last slot payment is set by the self.reserve or
-        # the first non-allocated bidder
-        if len(valid_self.bids) > num_slots:
-            last_payment = valid_self.bids[num_slots][1]
+        
+        (allocation, just_bids) = zip(*allocated_bids)
+        pc_payment = [x/y, for x, y in zip(list(just_bids[1:]), self.s[:(self.m - 1)])]
+        if len(allocated_bids) > self.m:
+            last_payment = valid_bids[self.m][1]/self.s[self.m - 1]
         else:
-            last_payment = self.reserve
-        per_click_payments.append(last_payment)
-        return (list(allocation), per_click_payments)
+            last_payment = self.r/self.s[self.m - 1]
+            
+        pc_payments.append(last_payment)
+        return(list(allocation), pc_payments)
+        
+    '''
+    The following function returns the allocation probability(ctr) of the 
+    corresponding bidder with bid=Bid given the others' bids
+    '''
+    def alloc_func(self, bidder_id, Bid):
+        for i in range(self.n):
+            if i == bidder_id:
+                k += 0
+            else:
+                if self.b[i] >= self.r/self.s[i] and\
+                    self.b[i] >= Bid * self.s[bidder_id]/self.s[i]:
+                    k += 1
+                else:
+                    k += 0
+        
+        if k > self.m - 1:
+            return 0
+        else:
+            return ctr[int(k)]
+         
+    '''
+    The following function returns the per-click-payment of the 
+    corresponding bidder with bid given the others' bids
+    '''  
+    def pay_func(self, bidder_id, Bid):
+        self.b[bidder_id] = Bid
+        rankscores = zip(range(0,self.n), [x*y for x,y in zip(self.b, self.s)])
+        valid = lambda (a, bid): bid >= self.r
+        valid_bids = filter(valid, rankscores)
+        rev_cmp_bids = lambda (a1, b1), (a2, b2): cmp(b2, b1)
+        # sort the valid (weighted) rankscores decreasingly
+        valid_bids.sort(rev_cmp_bids)
+        allocated_bids = valid_bids[:self.m]
+        
+        if len(allocated_bids) == 0:
+            return 0
+        (allocation, just_bids) = zip(*allocated_bids)
+        if len(valid_bids) > self.m:
+            last_payment = valid_bids[self.m][1]/self.s[self.m - 1]
+        else:
+            last_payment = self.r/self.s[self.m - 1]
+        
+        if bidder_id in list(allocation):
+            rank = list(allocation).index(bidder_id)
+            if rank < self.m-1:
+                return list(just_bids)[rank+1]/self.s[bidder_id]
+            else:
+                return last_payment        
+                
+        else:
+            return 0
+           
+        
+            
+            
+        
+        
+        
+        
 
        
 
