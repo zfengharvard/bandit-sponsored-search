@@ -45,34 +45,40 @@ class GSP(object):
             return ([], [])
         
         (allocation, just_bids) = zip(*allocated_bids)
-        pc_payment = [x/y, for x, y in zip(list(just_bids[1:]), self.s[:(self.m - 1)])]
-        if len(allocated_bids) > self.m:
-            last_payment = valid_bids[self.m][1]/self.s[self.m - 1]
+        allocated_s = [self.s[i] for i in allocation[:(self.m-1)]]
+        # compute the per-click-payment of the bidders except for the last bidder
+        pc_payment = [x/y for x,y in zip(list(just_bids[1:]), allocated_s)]
+        if len(valid_bids) > self.m:
+            last_payment = valid_bids[self.m][1]/self.s[allocation[-1]]
         else:
-            last_payment = self.r/self.s[self.m - 1]
+            last_payment = self.r/self.s[allocation[-1]]
             
-        pc_payments.append(last_payment)
-        return(list(allocation), pc_payments)
+        pc_payment.append(last_payment)
+        return(list(allocation), pc_payment)
         
     '''
     The following function returns the allocation probability(ctr) of the 
     corresponding bidder with bid=Bid given the others' bids
     '''
     def alloc_func(self, bidder_id, Bid):
-        for i in range(self.n):
-            if i == bidder_id:
-                k += 0
-            else:
-                if self.b[i] >= self.r/self.s[i] and\
-                    self.b[i] >= Bid * self.s[bidder_id]/self.s[i]:
-                    k += 1
-                else:
-                    k += 0
-        
-        if k > self.m - 1:
+        if Bid * self.s[bidder_id] < self.r:
             return 0
         else:
-            return ctr[int(k)]
+            # Count how many bidders have higher rankscores than this bidder
+            k = 0
+            for i in range(self.n):
+                if i == bidder_id:
+                    k += 0
+                else:
+                    if self.b[i] * self.s[i] >= Bid * self.s[bidder_id]:
+                        k += 1
+                    else:
+                        k += 0
+            # return the allocation probability (CTR)
+            if k > self.m - 1:
+                return 0
+            else:
+                return self.ctr[int(k)]
          
     '''
     The following function returns the per-click-payment of the 
@@ -92,9 +98,9 @@ class GSP(object):
             return 0
         (allocation, just_bids) = zip(*allocated_bids)
         if len(valid_bids) > self.m:
-            last_payment = valid_bids[self.m][1]/self.s[self.m - 1]
+            last_payment = valid_bids[self.m][1]/self.s[allocation[-1]]
         else:
-            last_payment = self.r/self.s[self.m - 1]
+            last_payment = self.r/self.s[allocation[-1]]
         
         if bidder_id in list(allocation):
             rank = list(allocation).index(bidder_id)
@@ -106,13 +112,3 @@ class GSP(object):
         else:
             return 0
            
-        
-            
-            
-        
-        
-        
-        
-
-       
-
