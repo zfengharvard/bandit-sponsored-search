@@ -17,14 +17,21 @@ T                   = 10
 
 # Preferred Discretizations for the bidders
 epsilon = []
-for i in range(0,num_bidders-1):
+for i in range(0,num_bidders):
     epsilon.append(0.1)
 
 # Create the bidders and store them in a list
 bidder = [] #list of bidder objects
-for i in range(0,num_bidders-1):
+for i in range(0,num_bidders):
     bidder.append(Bidder(i, epsilon[i]))
 
+
+for t in range(0,T):
+    #Create the rank scores (different at every t)
+    rank_scores = [np.random.uniform(0,1) for i in range(0,num_bidders)]
+    print rank_scores
+    bids = [bidder[i].bidding() for i in range(0,num_bidders)]
+    print bids
     
 
 
