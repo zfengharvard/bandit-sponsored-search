@@ -59,7 +59,7 @@ class Bidder(object):
 
     # Choosing a bid according to exp3/win_exp
     # Returns the bid (==arm*eps) (to be submitted to the auctioneer)
-    def bidding():
+    def bidding(self):
         bid              = draw(self.pi)
         return (bid*self.eps)
 
