@@ -45,7 +45,7 @@ class Bidder(object):
     # Compute estimate of utility from observed allocation
     # outcome and reward function (which is given to us
     # as a list)
-    def compute_utility(reward_won, reward_func, alloc):
+    def compute_utility(self, reward_won, reward_func, alloc):
         if reward_won == 1:
             return [1.0*(reward_func[b] - 1)*(alloc[b])/(prob_outcome(alloc)) for b in range(0,self.bid_space-1)] 
         else:
@@ -53,7 +53,7 @@ class Bidder(object):
 
     # Multiplicative Weights Update according to winexp
     # Updates weights list and returns the list of probabilities for each arm    
-    def weights_update_winexp(eta, estimated_utility):
+    def weights_update_winexp(self, eta, estimated_utility):
         self.weights = [self.weights[b]*math.exp(eta*estimated_utility[b]) for b in range(0, self.bid_space - 1)]
         self.pi      = [self.weights[b]/sum(self.weights) for b in range(0,self.bid_space -1)]
         return self.pi
@@ -67,7 +67,7 @@ class Bidder(object):
     # Updating the estimated loss (according to exp3) of the particular arm
     # subsequently, update the probability distribution for all arms
     # Returns the updated weight vector
-    def loss_update_exp3(bid,reward_func):
+    def loss_update_exp3(self, bid,reward_func):
         est_rew             = (reward_func[bid] - 1)/(self.pi[bid])
         self.loss[bid]      += est_rew
         l                   = [math.exp(self.eta_exp3*self.loss[b]) for b in range(0,self.bid_space-1)] 
@@ -78,7 +78,7 @@ class Bidder(object):
     # Updating the estimated loss (according to win_exp) of the particular arm
     # subsequently, update the probability distribution for all arms
     # Returns the updated probability vector
-    def loss_update_winexp(bid,reward_won,reward_func,alloc):
+    def loss_update_winexp(self, bid,reward_won,reward_func,alloc):
         if reward_won == 1:
             estimated_utility = compute_utility(1, reward_func) #returns a list with the utilities for all bids
         else:   
