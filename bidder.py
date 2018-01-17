@@ -33,6 +33,7 @@ class Bidder(object):
         self.eta_winexp = math.sqrt(math.log(self.bid_space,2)/(2*T*outcome_space))
         self.eta_exp3   = math.sqrt(1.0*(2*math.log(self.bid_space,2))/(T*self.bid_space))
         self.loss       = [0 for i in range(0,self.bid_space-1)]
+        self.utility    = [[] for i in range(0, T)]
 
     # P[o_t]: probability of seeing outcome o_t
     # pi[b] is the probability of bid b being chosen
@@ -44,7 +45,7 @@ class Bidder(object):
     # Compute estimate of utility from observed allocation
     # outcome and reward function (which is given to us
     # as a list)
-    def compute_utility(reward_won, reward_func):
+    def compute_utility(reward_won, reward_func, alloc):
         if reward_won == 1:
             return [1.0*(reward_func[b] - 1)*(alloc[b])/(prob_outcome(alloc)) for b in range(0,self.bid_space-1)] 
         else:
