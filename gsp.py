@@ -107,13 +107,13 @@ class GSP(object):
             last_payment = self.r/self.s[allocation[-1]]
         
         #TODO
-        " What is the payment in the following cases:
+        """ What is the payment in the following cases:
             1) when bidder_id holds the last slot? I see that then, he should pay last_payment. But what
                does that correspond to? Shouldn't it be just reserve price/self.s[bidder_id]?
             2) Was the code handling previously the case where you had less valid bids than slots? (In other 
                words, some slots were left uncovered.) It raised errors for a bunch of examples that I ran and 
                I fixed this bug. So let's see just solve the (1) above.
-        "
+        """
         if bidder_id in list(allocation):
             rank = list(allocation).index(bidder_id)
             if rank < self.m-1:
