@@ -28,18 +28,18 @@ class Bidder(object):
         self.eps        = eps
         self.bid_space  = int(1.0/self.eps)
         # initialization of the probabilities for each arm
-        self.pi         = [self.eps for i in range(0,self.bid_space-1)]
-        self.weights    = [1 for i in range(0,self.bid_space-1)]
+        self.pi         = [self.eps for i in range(0,self.bid_space)]
+        self.weights    = [1 for i in range(0,self.bid_space)]
         self.eta_winexp = math.sqrt(math.log(self.bid_space,2)/(2*T*outcome_space))
         self.eta_exp3   = math.sqrt(1.0*(2*math.log(self.bid_space,2))/(T*self.bid_space))
-        self.loss       = [0 for i in range(0,self.bid_space-1)]
+        self.loss       = [0 for i in range(0,self.bid_space)]
         self.utility    = [[] for i in range(0, T)]
 
     # P[o_t]: probability of seeing outcome o_t
     # pi[b] is the probability of bid b being chosen
     # alloc[2] = x_t(1*eps), pi[2] = pi_t(1*eps)
-    def prob_outcome(alloc):
-        p   = [self.pi[b]*alloc[b] for b in self.bid_space]
+    def prob_outcome(self,alloc):
+        p   = [self.pi[b]*alloc[b] for b in range(0,self.bid_space)]
         return sum(p)
         
     # Compute estimate of utility from observed allocation
@@ -47,15 +47,15 @@ class Bidder(object):
     # as a list)
     def compute_utility(self, reward_won, reward_func, alloc):
         if reward_won == 1:
-            return [1.0*(reward_func[b] - 1)*(alloc[b])/(prob_outcome(alloc)) for b in range(0,self.bid_space-1)] 
+            return [1.0*(reward_func[b] - 1)*(alloc[b])/(self.prob_outcome(alloc)) for b in range(0,self.bid_space)] 
         else:
-            return [-1.0*(1 - alloc[b])/(1 - prob_outcome(alloc)) for b in range(0,self.bid_space-1)] 
+            return [-1.0*(1 - alloc[b])/(1 - self.prob_outcome(alloc)) for b in range(0,self.bid_space)] 
 
     # Multiplicative Weights Update according to winexp
     # Updates weights list and returns the list of probabilities for each arm    
     def weights_update_winexp(self, eta, estimated_utility):
-        self.weights = [self.weights[b]*math.exp(eta*estimated_utility[b]) for b in range(0, self.bid_space - 1)]
-        self.pi      = [self.weights[b]/sum(self.weights) for b in range(0,self.bid_space -1)]
+        self.weights = [self.weights[b]*math.exp(eta*estimated_utility[b]) for b in range(0,self.bid_space)]
+        self.pi      = [self.weights[b]/sum(self.weights) for b in range(0,self.bid_space)]
         return self.pi
 
     # Choosing a bid according to exp3/win_exp
@@ -70,8 +70,8 @@ class Bidder(object):
     def loss_update_exp3(self, bid,reward_func):
         est_rew             = (reward_func[bid] - 1)/(self.pi[bid])
         self.loss[bid]      += est_rew
-        l                   = [math.exp(self.eta_exp3*self.loss[b]) for b in range(0,self.bid_space-1)] 
-        self.pi             = [l[b]/sum(l) for b in range(0,self.bid_space-1)]
+        l                   = [math.exp(self.eta_exp3*self.loss[b]) for b in range(0,self.bid_space)] 
+        self.pi             = [l[b]/sum(l) for b in range(0,self.bid_space)]
         return self.pi
         
     
