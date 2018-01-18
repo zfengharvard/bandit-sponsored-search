@@ -97,18 +97,27 @@ class GSP(object):
         if len(allocated_bids) == 0:
             return 0
         (allocation, just_bids) = zip(*allocated_bids)
+        lst = list(just_bids)
+        if len(lst) < self.m: #slots are left uncovered
+            for j in range(len(lst),self.m):
+                lst.append(self.r)
         if len(valid_bids) > self.m:
             last_payment = valid_bids[self.m][1]/self.s[allocation[-1]]
         else:
             last_payment = self.r/self.s[allocation[-1]]
         
+        #TODO
+        " What is the payment in the following cases:
+            1) when bidder_id holds the last slot? I see that then, he should pay last_payment. But what
+               does that correspond to? Shouldn't it be just reserve price/self.s[bidder_id]?
+            2) Was the code handling previously the case where you had less valid bids than slots? (In other 
+               words, some slots were left uncovered.) It raised errors for a bunch of examples that I ran and 
+               I fixed this bug. So let's see just solve the (1) above.
+        "
         if bidder_id in list(allocation):
             rank = list(allocation).index(bidder_id)
             if rank < self.m-1:
-                if len(list(just_bids)) == bidder_id + 1: #current agent was the last one with bid > reserve
-                    return self.r
-                else:
-                    return list(just_bids)[rank+1]/self.s[bidder_id]
+                return lst[rank+1]/self.s[bidder_id]
             else:
                 return last_payment        
                 
