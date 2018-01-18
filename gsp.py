@@ -105,7 +105,7 @@ class GSP(object):
         if bidder_id in list(allocation):
             rank = list(allocation).index(bidder_id)
             if rank < self.m-1:
-                if len(list(just_bids)) == 1: #current agent was the only one with bid > reserve
+                if len(list(just_bids)) == bidder_id + 1: #current agent was the last one with bid > reserve
                     return self.r
                 else:
                     return list(just_bids)[rank+1]/self.s[bidder_id]
