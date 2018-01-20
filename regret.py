@@ -1,24 +1,29 @@
 ############ 
 # Implements the regret both in the discretized case
+# All functions in this module are from the perspective of a single bidder.
+# The aggregate regret for all bidders is computed in the master file.
 ############ 
 
 import numpy as np
+from auction_parameters import *
 
-# TODO we need to run each instance of T rounds *multiple times* and take the average
 # Arguments: 
 # - cont: 0 when discrete, 1 when continuous
-# - v_lst: 2D list with the realized valuations (size: num_rounds x bid_space)
-# - p_lst: 2D list with the realized payments (size: num_rounds x bid_space)
-# - alloc: 2D list with the realized allocation (size: num_rounds x bid_space)
+# - r_lst: 2D list with the realized rewards (size: num_rounds x bid_space)
+# - alloc: 1D list with the realized allocation (size: bid_space)
 # - bid_space: number of arms
-# - algo_util: list with the utility that our algorithm has acquired (size: T) 
-def regret(cont, v_lst, p_lst, alloc, bid_space, algo_util):
+# - algo_util: list with the utility that our algorithm has acquired for the submitted bid of the bidder (size: T) 
+def regret(cont, r_lst, alloc, bid_space, algo_util):
     if cont == 0: #discrete case
+        tmp  = []
+        for t in range(0, T):
+            tmp.append([r_lst[t][b]*alloc[t][b] - 1 for b in range(0,bid_space)])
         util = []
-        for i in range(0,bid_space-1):
-            util_lst = [(v_lst[j][i] - p_lst[j][i])*(alloc[j][i]) for j in range(0,len(v_lst)-1)]
-            util.append(sum(util_lst))
+        for b in range(0,bid_space):
+            util.append(sum(tt[b] for tt in tmp))
+            
         max_util_hindsight = np.max(util)
     else: #continuous case
+        return
         # for now, we're not comparing with the continuous case
     return (max_util_hindsight - sum(algo_util))
