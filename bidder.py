@@ -13,9 +13,7 @@ import random
 import numpy as np
 from probability import draw
 import math
-
-T = 10
-outcome_space = 2
+from master_file import *
 
 
 class Bidder(object):
@@ -34,7 +32,7 @@ class Bidder(object):
         self.eta_exp3   = math.sqrt(1.0*(2*math.log(self.bid_space,2))/(T*self.bid_space))
         self.loss       = [0 for i in range(0,self.bid_space)]
         self.utility    = [[] for i in range(0, T)]
-
+        self.regret     = [0]*num_repetitions
     # P[o_t]: probability of seeing outcome o_t
     # pi[b] is the probability of bid b being chosen
     # alloc[2] = x_t(1*eps), pi[2] = pi_t(1*eps)
