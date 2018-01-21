@@ -5,7 +5,6 @@
 ############ 
 
 import numpy as np
-from auction_parameters import *
 
 # Arguments: 
 # - cont: 0 when discrete, 1 when continuous
@@ -13,7 +12,7 @@ from auction_parameters import *
 # - alloc: 1D list with the realized allocation (size: bid_space)
 # - bid_space: number of arms
 # - algo_util: list with the utility that our algorithm has acquired for the submitted bid of the bidder (size: T) 
-def regret(cont, r_lst, alloc, bid_space, algo_util):
+def regret(cont, r_lst, alloc, bid_space, algo_util, T):
     if cont == 0: #discrete case
         tmp  = []
         for t in range(0, T):
