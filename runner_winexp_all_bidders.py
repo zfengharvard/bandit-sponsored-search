@@ -63,19 +63,10 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
             #weights update
             print ("Bidder's utility")
             print bidder[i].utility[t]
-            #TODO: I have checked up until this point and all is computed correctly. Next Steps:
-            """
-                1) Need to check that utilities are included correctly for all timesteps (list of lists)
-                2) Solve/Clarify the TODOs in the gsp.py module
-                3) Compute the regret first for the win-exp algo to make sure everything is computed correctly
-                4) Compute the regret for the EXP3 algorithm (CAREFUL! (3) and (4) have to be computed for the same 
-                   inputs.
-                5) Run steps 3 and 4 repeatedly for num_repetitions in order to get estimated expected regret.
-            """
             bidder[i].weights_update_winexp(bidder[i].eta_winexp, bidder[i].utility[t])        
         
         
-    # after the end of T timesteps, compute regrets for both the WIN-EXP and the EXP3 algo
+    # after the end of T timesteps, compute regrets for both the WIN-EXP algo
     for i in range(0, num_bidders):
         algo_util = [bidder[i].utility[t][int(bids[t][bidder[i].id]/bidder[i].eps)] for t in range(0,T)]
         bidder[i].winexp_regret[curr_rep] = regret(0, bidder[i].reward_func, bidder[i].alloc_func, bidder[i].bid_space, algo_util, T)
