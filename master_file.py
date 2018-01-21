@@ -3,6 +3,7 @@ import random
 import math
 from copy import deepcopy
 from runner_winexp_all_bidders import *
+from runner_exp3_all_bidders import *
 
 
 def regret_winexp(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values):
