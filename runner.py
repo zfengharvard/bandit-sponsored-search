@@ -1,10 +1,10 @@
 from bidder import *
-from master_file import regret_winexp
+from master_file import regret_winexp, regret_exp3
 from auction_parameters import set_auction_params
 
 
-num_repetitions = 10
-for T in range(10,11):
+num_repetitions = 2
+for T in range(3,4):
     (num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values) = set_auction_params(T,num_repetitions)
     # Preferred Discretizations for the bidders
     epsilon = []

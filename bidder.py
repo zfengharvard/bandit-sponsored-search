@@ -40,10 +40,10 @@ class Bidder(object):
     # pi[b] is the probability of bid b being chosen
     # alloc[2] = x_t(1*eps), pi[2] = pi_t(1*eps)
     def prob_outcome(self,alloc):
-        print ("Allocation inside prob outcome")
-        print alloc
-        print ("Probabilities inside prob outcome")
-        print self.pi
+        #print ("Allocation inside prob outcome")
+        #print alloc
+        #print ("Probabilities inside prob outcome")
+        #print self.pi
         p   = [self.pi[b]*alloc[b] for b in range(0,self.bid_space)]
         return sum(p)
         

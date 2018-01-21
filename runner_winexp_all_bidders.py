@@ -49,7 +49,7 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
             #reward function: value - payment(coming from GSP module)
             bidder[i].pay_func[t] = [GSP(ctr[t], reserve[t], bids[t], rank_scores[t], num_slots, num_bidders).pay_func(bidder[i].id, bid*bidder[i].eps) for bid in range(0, bidder[i].bid_space)]  
             print ("Payment Function for Bidder %d"%bidder[i].id)
-            print bidder[i].pay_func
+            print bidder[i].pay_func[t]
             bidder[i].reward_func[t] = compute_reward(bidder[i].alloc_func[t], bidder[i].pay_func[t], ctr[t], values[t])
             print ("Reward Function for Bidder")
             print bidder[i].reward_func[t]
