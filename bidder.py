@@ -21,21 +21,21 @@ class Bidder(object):
     # differentiate bidders based on that number.
     # Also, each bidder can choose a different discretization
     def __init__(self, bidder_id, eps, T, outcome_space, num_repetitions):
-        self.id         = bidder_id
-        self.eps        = eps
-        self.bid_space  = int(1.0/self.eps)
+        self.id             = bidder_id
+        self.eps            = eps
+        self.bid_space      = int(1.0/self.eps)
         # initialization of the probabilities for each arm
-        self.pi         = [self.eps for i in range(0,self.bid_space)]
-        self.weights    = [1 for i in range(0,self.bid_space)]
-        self.eta_winexp = math.sqrt(math.log(self.bid_space,2)/(2*T*outcome_space))
-        self.eta_exp3   = math.sqrt(1.0*(2*math.log(self.bid_space,2))/(T*self.bid_space))
-        self.loss       = [0 for i in range(0,self.bid_space)]
-        self.utility    = [[] for i in range(0, T)]
-        self.winexp_regret = [0]*num_repetitions 
-        self.exp3_regret   = [0]*num_repetitions
-        self.alloc_func = [[] for t in range(0,T)]
-        self.pay_func   = [[] for t in range(0,T)]
-        self.reward_func = [[] for t in range(0,T)]
+        self.pi             = [self.eps for i in range(0,self.bid_space)]
+        self.weights        = [1 for i in range(0,self.bid_space)]
+        self.eta_winexp     = math.sqrt(math.log(self.bid_space,2)/(2*T*outcome_space))
+        self.eta_exp3       = math.sqrt(1.0*(2*math.log(self.bid_space,2))/(T*self.bid_space))
+        self.loss           = [0 for i in range(0,self.bid_space)]
+        self.utility        = [[] for i in range(0, T)]
+        self.winexp_regret  = [0]*num_repetitions 
+        self.exp3_regret    = [0]*num_repetitions
+        self.alloc_func     = [[] for t in range(0,T)]
+        self.pay_func       = [[] for t in range(0,T)]
+        self.reward_func    = [[] for t in range(0,T)]
     # P[o_t]: probability of seeing outcome o_t
     # pi[b] is the probability of bid b being chosen
     # alloc[2] = x_t(1*eps), pi[2] = pi_t(1*eps)
