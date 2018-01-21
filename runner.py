@@ -15,4 +15,13 @@ for T in range(10,11):
     bidder = [] #list of bidder objects
     for i in range(0,num_bidders):
         bidder.append(Bidder(i, epsilon[i], T, outcome_space, num_repetitions))
+    # Compute regret for winexp for T rounds (*num of repetitions)
     regret_winexp(bidder,T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values)
+    # Compute regret for exp3 for T rounds (*num of repetitions) after you reinitialize everything
+    for i in range(0, num_bidders):
+        bidder[i].pi = [bidder[i].eps for j in range(0, bidder[i].bid_space)]
+        bidder[i].weights = [1 for j in range(0, bidder[i].bid_space)]
+        bidder[i].utility = [[] for j in range(0,T)]
+        bidder[i].exp3_regret = [0]*num_repetitions
+        
+    regret_exp3(bidder,T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values)
