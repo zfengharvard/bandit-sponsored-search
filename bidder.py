@@ -13,7 +13,6 @@ import random
 import numpy as np
 from probability import draw
 import math
-from master_file import *
 
 
 class Bidder(object):
@@ -21,7 +20,7 @@ class Bidder(object):
     # Each bidder has a unique id and we 
     # differentiate bidders based on that number.
     # Also, each bidder can choose a different discretization
-    def __init__(self, bidder_id, eps):
+    def __init__(self, bidder_id, eps, T, outcome_space, num_repetitions):
         self.id         = bidder_id
         self.eps        = eps
         self.bid_space  = int(1.0/self.eps)
@@ -32,11 +31,19 @@ class Bidder(object):
         self.eta_exp3   = math.sqrt(1.0*(2*math.log(self.bid_space,2))/(T*self.bid_space))
         self.loss       = [0 for i in range(0,self.bid_space)]
         self.utility    = [[] for i in range(0, T)]
-        self.regret     = [0]*num_repetitions
+        self.winexp_regret = [0]*num_repetitions 
+        self.exp3_regret   = [0]*num_repetitions
+        self.alloc_func = [[] for t in range(0,T)]
+        self.pay_func   = [[] for t in range(0,T)]
+        self.reward_func = [[] for t in range(0,T)]
     # P[o_t]: probability of seeing outcome o_t
     # pi[b] is the probability of bid b being chosen
     # alloc[2] = x_t(1*eps), pi[2] = pi_t(1*eps)
     def prob_outcome(self,alloc):
+        print ("Allocation inside prob outcome")
+        print alloc
+        print ("Probabilities inside prob outcome")
+        print self.pi
         p   = [self.pi[b]*alloc[b] for b in range(0,self.bid_space)]
         return sum(p)
         
@@ -44,6 +51,8 @@ class Bidder(object):
     # outcome and reward function (which is given to us
     # as a list)
     def compute_utility(self, reward_won, reward_func, alloc):
+        print ("Probability of outcome:")
+        print self.prob_outcome(alloc)
         if reward_won == 1:
             return [1.0*(reward_func[b] - 1)*(alloc[b])/(self.prob_outcome(alloc)) for b in range(0,self.bid_space)] 
         else:
