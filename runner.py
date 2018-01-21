@@ -1,0 +1,18 @@
+from bidder import *
+from master_file import regret_winexp
+from auction_parameters import set_auction_params
+
+
+num_repetitions = 10
+for T in range(10,11):
+    (num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values) = set_auction_params(T,num_repetitions)
+    # Preferred Discretizations for the bidders
+    epsilon = []
+    for i in range(0,num_bidders):
+        epsilon.append(0.1)
+
+    # Create the bidders and store them in a list
+    bidder = [] #list of bidder objects
+    for i in range(0,num_bidders):
+        bidder.append(Bidder(i, epsilon[i], T, outcome_space, num_repetitions))
+    regret_winexp(bidder,T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values)
