@@ -61,6 +61,8 @@ class Bidder(object):
     # Multiplicative Weights Update according to winexp
     # Updates weights list and returns the list of probabilities for each arm    
     def weights_update_winexp(self, eta, estimated_utility):
+        print ("eta")
+        print eta
         self.weights = [self.weights[b]*math.exp(eta*estimated_utility[b]) for b in range(0,self.bid_space)]
         self.pi      = [self.weights[b]/sum(self.weights) for b in range(0,self.bid_space)]
         return self.pi
