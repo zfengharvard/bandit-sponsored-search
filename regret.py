@@ -24,5 +24,7 @@ def regret(cont, r_lst, alloc, bid_space, algo_util, T):
         max_util_hindsight = np.max(util)
     else: #continuous case
         return
+    print ("Algorithm's Utility: %f"%sum(algo_util))
+    print ("Best fixed: %f"%max_util_hindsight)
         # for now, we're not comparing with the continuous case
     return (max_util_hindsight - sum(algo_util))
