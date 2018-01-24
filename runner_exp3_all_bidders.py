@@ -52,7 +52,7 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
             print bidder[i].reward_func[t]
             #### EXP3 computations ####
             bidder[i].utility[t] = [bidder[i].reward_func[t][b]*bidder[i].alloc_func[t][b] - 1 for b in range(0, bidder[i].bid_space)]
-            print ("Bidder's utility")
+            print ("Bidder %d utility"%bidder[i].id)
             print bidder[i].utility[t]
 
             #weights update
@@ -60,6 +60,8 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
             arm_chosen = int(math.ceil(bids[t][bidder[i].id]/bidder[i].eps))
             print ("Arm Chosen")
             print arm_chosen
+
+            print ("Bidder %d Realized Utility: %f"%(bidder[i].id,bidder[i].utility[t][arm_chosen]))
 
 
             print ("Probability vector before computing estimated loss")
@@ -82,7 +84,13 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
         
     # after the end of T timesteps, compute regrets for both the EXP3 algo
     for i in range(0, num_bidders):
-        algo_util = [bidder[i].utility[t][int(bids[t][bidder[i].id]/bidder[i].eps)] for t in range(0,T)]
+        algo_util = [bidder[i].utility[t][int(math.ceil(bids[t][bidder[i].id]/bidder[i].eps))] for t in range(0,T)]
+        print ("Utility that bidder %d"%i + " got:")
+        print algo_util
+        print ("Reward Function for bidder %d"%i)
+        print bidder[i].reward_func
+        print ("Allocation Function for bidder %d"%i)
+        print bidder[i].alloc_func
         bidder[i].exp3_regret[curr_rep] = regret(0, bidder[i].reward_func, bidder[i].alloc_func, bidder[i].bid_space, algo_util, T)
     s = 0
     for i in range(0, num_bidders):
