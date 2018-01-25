@@ -25,6 +25,7 @@ def regret_winexp(bidder, T,num_repetitions, num_bidders, num_slots, outcome_spa
 
     print ("WIN-EXP expected regret for T=%d"%T)
     print winexp_expected_regr
+    return (winexp_expected_regr/T)
 
 
 def regret_exp3(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values):
@@ -46,3 +47,4 @@ def regret_exp3(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space
 
     print ("EXP3 expected regret for T=%d"%T)
     print exp3_expected_regr
+    return (exp3_expected_regr/T)
