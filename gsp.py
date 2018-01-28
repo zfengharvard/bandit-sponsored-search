@@ -57,7 +57,7 @@ class GSP(object):
         return(list(allocation), pc_payment)
         
     '''
-    The following function returns the allocation probability(ctr) of the 
+    Allocation function: return the allocation probability(ctr) of the 
     corresponding bidder with bid=Bid given the others' bids
     '''
     def alloc_func(self, bidder_id, Bid):
@@ -81,7 +81,7 @@ class GSP(object):
                 return self.ctr[int(k)]
          
     '''
-    The following function returns the per-click-payment of the 
+    Payment function: return the per-click-payment of the 
     corresponding bidder with bid given the others' bids
     '''  
     def pay_func(self, bidder_id, Bid):
