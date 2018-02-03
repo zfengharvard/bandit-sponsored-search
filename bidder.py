@@ -23,11 +23,11 @@ class Bidder(object):
     def __init__(self, bidder_id, eps, T, outcome_space, num_repetitions):
         self.id             = bidder_id
         self.eps            = eps
-        self.bid_space      = int(1.0/self.eps)
+        self.bid_space      = int(1.0/self.eps) + 1
         # initialization of the probabilities for each arm
-        self.pi             = [self.eps for i in range(0,self.bid_space)]
+        self.pi             = [1.0/self.bid_space for i in range(0,self.bid_space)]
         self.weights        = [1 for i in range(0,self.bid_space)]
-        self.eta_winexp     = math.sqrt(math.log(self.bid_space,2)/(2*T*outcome_space))
+        self.eta_winexp     = math.sqrt(2*math.log(self.bid_space,2)/(5*T))
         self.eta_exp3       = math.sqrt(1.0*(2*math.log(self.bid_space,2))/(T*self.bid_space))
         self.loss           = [0 for i in range(0,self.bid_space)]
         self.utility        = [[] for i in range(0, T)]
