@@ -24,6 +24,9 @@ def regret_winexp(bidder, T,num_repetitions, num_bidders, num_slots, outcome_spa
         bidder.alloc_func     = [[[] for t in range(0,T)] for _ in range(0,num_auctions)]
         bidder.pay_func       = [[] for t in range(0,T)]
         bidder.reward_func    = [[[] for t in range(0,T)] for _ in range(0,num_auctions)]
+        
+    print ("size of winexp list")
+    print len(winexp_regr)
 
  
     winexp_expected_regr = []
@@ -47,8 +50,8 @@ def regret_winexp(bidder, T,num_repetitions, num_bidders, num_slots, outcome_spa
 
 
 def regret_exp3(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values,bids, num_auctions):
-    f2 = "exp3_regrets.txt"
-    exp3_regrets = open(f2,"w")
+    #f2 = "exp3_regrets.txt"
+    #exp3_regrets = open(f2,"w")
     #exp3_regr is now a num_repetitionsxT matrix
     exp3_regr = []
     for rep in range(0, num_repetitions):
@@ -80,11 +83,11 @@ def regret_exp3(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space
         for t in range(0,T):
             s += ("%.5f "%exp3_regr[r][t])
         s += "\n"
-        exp3_regrets.write(s) 
+        #exp3_regrets.write(s) 
 
     #final_exp3_regr = [exp3_expected_regr[t]/t for t in range(1,T-1)]
-    print ("Inside master_file.py")
-    print ("Expected regret (div by num_repetitions")
+    #print ("Inside master_file.py")
+    #print ("Expected regret (div by num_repetitions)")
     final_exp3_regr = exp3_expected_regr
-    print final_exp3_regr
+    #print final_exp3_regr
     return (final_exp3_regr)

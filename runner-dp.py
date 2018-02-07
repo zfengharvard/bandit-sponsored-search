@@ -6,13 +6,13 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 
-num_repetitions = 20
+num_repetitions = 03
 winexp = [] 
 exp3 = []
 min_num_rounds = 0
-max_num_rounds = 200
-step = 10
-num_auctions = 5
+max_num_rounds = 4
+step = 1
+num_auctions = 1
 rounds = [T for T in range(min_num_rounds,max_num_rounds, step)]
 
 
@@ -25,21 +25,18 @@ bids = []
 tmp = []
 for t in range(0,T):
     tmp.append([np.random.uniform(0,1) for i in range(0,num_bidders)])
-# for each inside auction, the bids of all other bidders are fixed!
+# each auction in the batch for timestep t, same bids
 for auction in range(0,num_auctions):
     bids.append(tmp)
 
-#print ("Bids initially")
-#print bids
-
 
 # Preferred Discretizations for the learner
-epsilon = 0.01
+epsilon = 0.1
 bidder = Bidder(0, epsilon, T, outcome_space, num_repetitions,num_auctions)
 cpy1 = deepcopy(bids)
 cpy2 = deepcopy(bids)
 #winexp regret has to be returned as a list of all the regrets for all the rounds
-winexp = regret_winexp(bidder, T, num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy1, num_auctions)
+#winexp = regret_winexp(bidder, T, num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy1, num_auctions)
 
 bidder.pi               = [1.0/bidder.bid_space for j in range(0, bidder.bid_space)]
 bidder.weights          = [1 for j in range(0, bidder.bid_space)]
@@ -55,22 +52,24 @@ bidder.reward_func      = [[[] for t in range(0,T)] for _ in range(0,num_auction
 #this has to be returned as a list of all the regrets for all the rounds 
 exp3 = regret_exp3(bidder,T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy2, num_auctions)
 
-final_winexp = [winexp[i] for i in range(min_num_rounds, max_num_rounds, step)]
+#final_winexp = [winexp[i] for i in range(min_num_rounds, max_num_rounds, step)]
 final_exp3 = [exp3[i] for i in range(min_num_rounds,max_num_rounds,step)]
+print ("final_ex3")
+print final_exp3
 
 matplotlib.rcParams.update({'font.size': 17})
 fig = plt.figure()
 fig.set_figheight(10)
 fig.set_figwidth(10)
 plt.figure(1,figsize=(10,10))
-plt.plot(rounds, final_winexp, 'ro', label = 'WIN-EXP')
-plt.plot(rounds,final_winexp, 'r-')
+#plt.plot(rounds, final_winexp, 'ro', label = 'WIN-EXP')
+#plt.plot(rounds,final_winexp, 'r-')
 plt.plot(rounds, final_exp3, 'bs', label = 'EXP3')
 plt.plot(rounds,final_exp3, 'b-')
 plt.legend(loc='best')
 plt.xlabel('number of rounds')
 plt.ylabel('regret')
 plt.title('Regret Performance of WIN-EXP vs EXP3')
-plt.savefig('winexp_vs_exp3_one_learner.png')
-#plt.savefig('exp3.png')
+#plt.savefig('winexp_vs_exp3_one_learner.png')
+plt.savefig('exp3.png')
 #plt.show()
