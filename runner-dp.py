@@ -6,13 +6,13 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 
-num_repetitions = 50
+num_repetitions = 20
 winexp = [] 
 exp3 = []
 min_num_rounds = 0
-max_num_rounds = 1000
-step = 5
-num_auctions = 10
+max_num_rounds = 200
+step = 10
+num_auctions = 5
 rounds = [T for T in range(min_num_rounds,max_num_rounds, step)]
 
 
@@ -22,10 +22,11 @@ T = max_num_rounds
 # bids of the "adversaries" are considered fixed
 # bids size now: num_auctions x T x num_bidders
 bids = [] 
+tmp = []
+for t in range(0,T):
+    tmp.append([np.random.uniform(0,1) for i in range(0,num_bidders)])
+# for each inside auction, the bids of all other bidders are fixed!
 for auction in range(0,num_auctions):
-    tmp = []
-    for t in range(0,T):
-        tmp.append([np.random.uniform(0,1) for i in range(0,num_bidders)])
     bids.append(tmp)
 
 #print ("Bids initially")
