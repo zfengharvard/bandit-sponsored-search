@@ -7,8 +7,8 @@ import numpy as np
 import random
 
 def set_auction_params(T,num_repetitions,num_auctions):
-    num_bidders         = 20
-    num_slots           = 2
+    num_bidders         = 100
+    num_slots           = 10
     outcome_space       = 2
     #Create the rank scores. Size of rank_scores: num_auctions x T x num_bidders
     # rank scores size: num_auctions x T x num_slots

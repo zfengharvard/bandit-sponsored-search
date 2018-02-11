@@ -6,14 +6,17 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 
-num_repetitions = 10
+num_repetitions = 2
 winexp = [] 
 exp3 = []
 min_num_rounds = 0
-max_num_rounds = 500
-step = 10
-num_auctions = 1
+max_num_rounds = 200
+step = 20
+num_auctions = 2
 rounds = [T for T in range(min_num_rounds,max_num_rounds, step)]
+
+
+
 
 #initialize the bidders once for the maximum number of rounds 
 T = max_num_rounds

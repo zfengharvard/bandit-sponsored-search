@@ -29,10 +29,13 @@ class Bidder(object):
         self.weights        = [1 for i in range(0,self.bid_space)]
         self.eta_winexp     = math.sqrt(2*math.log(self.bid_space,2)/(5*T))
         self.eta_exp3       = math.sqrt(1.0*(2*math.log(self.bid_space,2))/(T*self.bid_space))
+        self.eta_gexp3      = 0.95*math.sqrt(math.log(self.bid_space,2)/(T*self.bid_space))
+        self.beta           = math.sqrt(math.log(self.bid_space,2)*(1/0.01)/(T*self.bid_space))
         self.loss           = [0 for i in range(0,self.bid_space)]
         self.utility        = [[[] for i in range(0, T)] for _ in range(0,num_auctions)]
         self.winexp_regret  = [0]*num_repetitions 
         self.exp3_regret    = [0]*num_repetitions
+        self.gexp3_regret   = [0]*num_repetitions
         self.avg_reward     = [[] for _ in range(0,T)]
         self.avg_utility    = [[] for _ in range(0,T)]
         self.alloc_func     = [[[] for t in range(0,T)] for _ in range(0,num_auctions)]
@@ -68,6 +71,11 @@ class Bidder(object):
     # Returns the bid (==arm*eps) (to be submitted to the auctioneer)
     def bidding(self):
         bid              = draw(self.pi)
+        return (bid*self.eps)
+    
+    def gbidding(self, weights,gamma):
+        probs            = distr(weights,gamma)
+        bid              = draw_gexp3(probs)
         return (bid*self.eps)
 
     # Updating the estimated loss (according to exp3) of the particular arm

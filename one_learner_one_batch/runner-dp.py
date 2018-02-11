@@ -1,6 +1,6 @@
 from bidder import *
 from copy import deepcopy
-from master_file import  regret_winexp, regret_exp3
+from master_file import  regret_winexp, regret_exp3, regret_gexp3
 from auction_parameters import set_auction_params
 import matplotlib
 import matplotlib.pyplot as plt
@@ -11,7 +11,7 @@ winexp = []
 exp3 = []
 min_num_rounds = 0
 max_num_rounds = 400
-step = 5
+step = 10
 num_auctions = 2
 rounds = [T for T in range(min_num_rounds,max_num_rounds, step)]
 
@@ -34,6 +34,7 @@ epsilon = 0.1
 bidder = Bidder(0, epsilon, T, outcome_space, num_repetitions, num_auctions)
 cpy1 = deepcopy(bids)
 cpy2 = deepcopy(bids)
+cp3  = deepcopy(bids)
 #winexp regret has to be returned as a list of all the regrets for all the rounds
 winexp = regret_winexp(bidder, T, num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy1, num_auctions)
 
@@ -51,8 +52,22 @@ bidder.reward_func      = [[[] for t in range(0,T)]  for _ in range(0,num_auctio
 #this has to be returned as a list of all the regrets for all the rounds 
 exp3 = regret_exp3(bidder,T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy2,num_auctions)
 
+bidder.pi               = [1.0/bidder.bid_space for j in range(0, bidder.bid_space)]
+bidder.weights          = [1 for j in range(0, bidder.bid_space)]
+bidder.gexp3_regret     = [0]*num_repetitions
+bidder.utility          = [[[] for i in range(0, T)] for _ in range(0,num_auctions)]
+bidder.avg_reward       = [[] for _ in range(0,T)]
+bidder.avg_utility      = [[] for _ in range(0,T)]
+bidder.loss             = [0 for i in range(0,bidder.bid_space)]
+bidder.alloc_func       = [[[] for t in range(0,T)] for _ in range(0,num_auctions)]
+bidder.pay_func         = [[] for t in range(0,T)]
+bidder.reward_func      = [[[] for t in range(0,T)]  for _ in range(0,num_auctions)]
+
+gexp3 = regret_gexp3(bidder,T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy2,num_auctions)
+
 final_winexp = [winexp[i] for i in range(min_num_rounds, max_num_rounds, step)]
-final_exp3 = [exp3[i] for i in range(min_num_rounds,max_num_rounds,step)]
+final_exp3   = [exp3[i] for i in range(min_num_rounds,max_num_rounds,step)]
+final_gexp3  = [gexp3[i] for i in range(min_num_rounds,max_num_rounds,step)]
 
 #print ("final_ex3")
 #print final_exp3
@@ -66,10 +81,12 @@ plt.plot(rounds, final_winexp, 'ro', label = 'WIN-EXP')
 plt.plot(rounds,final_winexp, 'r-')
 plt.plot(rounds, final_exp3, 'bs', label = 'EXP3')
 plt.plot(rounds,final_exp3, 'b-')
+plt.plot(rounds, final_gexp3, 'g^', label = 'gEXP3')
+plt.plot(rounds,final_gexp3, 'g-')
 plt.legend(loc='best')
 plt.xlabel('number of rounds')
 plt.ylabel('regret')
 plt.title('Regret Performance of WIN-EXP vs EXP3')
-#plt.savefig('winexp_vs_exp3_one_learner_multiple_auctions.png')
+plt.savefig('winexp_vs_exp3_vs_gexp3_one_learner_multiple_auctions.png')
 #plt.savefig('exp3.png')
 plt.show()

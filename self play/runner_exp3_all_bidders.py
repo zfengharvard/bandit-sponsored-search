@@ -16,6 +16,7 @@ from runner_winexp_all_bidders import compute_reward
 def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values,num_auctions):
     algo_util  = []
     temp_regr  = []
+    temp_bids  = []
     bids       = [[] for _ in range(0,T)]
     for t in range(0,T):
         #   The bids chosen for both the learner and the adversaries are the same
@@ -24,6 +25,7 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
         bid_chosen = [0]*num_bidders
         for i in range(0,num_bidders):
             bid_chosen[i] = round(bidder[i].bidding(),2)
+        print bid_chosen
         for auction in range(0,num_auctions):
             #bid_chosen = round(np.random.uniform(0,1),1)
             #bid_chosen = round(np.random.uniform(0,1),2)
@@ -107,8 +109,9 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
         
         algo_util.append(bidder[0].avg_utility[t][int(math.ceil(bids[t][0]/bidder[0].eps))])
         temp_regr.append(regret(0,bidder[0].reward_func,bidder[0].alloc_func,bidder[0].bid_space, algo_util,t,num_auctions))    
+        temp_bids.append(bids[t])
         #print ("Regret inside" )
         #print temp_regr
 
-    return temp_regr   
+    return (temp_regr,temp_bids)   
 

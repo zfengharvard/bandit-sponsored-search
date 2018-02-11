@@ -31,15 +31,18 @@ def compute_reward(allocation_func, payment_func, ctr, values):
 def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values,num_auctions):
     algo_util = []
     temp_regr = []
+    temp_bids = []
     bids      = [[] for _ in range(0,T)]
     for t in range(0,T):
         bid_chosen = [0]*num_bidders
         for i in range(0,num_bidders):
             bid_chosen[i] = round(bidder[i].bidding(),2)
-            
+
         # same bid over all auctions that run at the same timestep
         for auction in range(0,num_auctions):
+            #print ("all bids at timestep t=%d"%t)
             bids[t] = bid_chosen
+            #print bids
             
             for i in range(0,num_bidders):
                 # All the bidders are learning. Even the adaptive adversaries. 
@@ -103,7 +106,9 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
         # We compute the regret only for the learner 
         algo_util.append(bidder[0].avg_reward[t][arm_chosen[0]] - 1)
         temp_regr.append(regret(0, bidder[0].reward_func, bidder[0].alloc_func, bidder[0].bid_space, algo_util, t,num_auctions))
+        #print bids[t]
+        temp_bids.append(bids[t])
 
-    return temp_regr   
+    return (temp_regr,temp_bids)   
 
 
