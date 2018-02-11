@@ -10,39 +10,46 @@ num_repetitions = 10
 winexp = [] 
 exp3 = []
 min_num_rounds = 0
-max_num_rounds = 1000
+max_num_rounds = 400
 step = 5
-#num_auctions = 1
+num_auctions = 2
 rounds = [T for T in range(min_num_rounds,max_num_rounds, step)]
 
 #initialize the bidders once for the maximum number of rounds 
 T = max_num_rounds
-(num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values) = set_auction_params(T,num_repetitions)
+(num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values) = set_auction_params(T,num_repetitions,num_auctions)
 # bids of the "adversaries" are considered fixed
 # bids size now: num_auctions x T x num_bidders
 bids = [] 
-for t in range(0,T):
-    bids.append([np.random.uniform(0,1) for i in range(0,num_bidders)])
+for auction in range(0,num_auctions):
+    auction_bids = []
+    for t in range(0,T):
+        auction_bids.append([np.random.uniform(0,1) for i in range(0,num_bidders)])
+    bids.append(auction_bids)
+
+
 
 # Preferred Discretizations for the learner
-epsilon = 0.01
-bidder = Bidder(0, epsilon, T, outcome_space, num_repetitions)
+epsilon = 0.1
+bidder = Bidder(0, epsilon, T, outcome_space, num_repetitions, num_auctions)
 cpy1 = deepcopy(bids)
 cpy2 = deepcopy(bids)
 #winexp regret has to be returned as a list of all the regrets for all the rounds
-winexp = regret_winexp(bidder, T, num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy1)
+winexp = regret_winexp(bidder, T, num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy1, num_auctions)
 
 bidder.pi               = [1.0/bidder.bid_space for j in range(0, bidder.bid_space)]
 bidder.weights          = [1 for j in range(0, bidder.bid_space)]
 bidder.exp3_regret      = [0]*num_repetitions
-bidder.utility          = [[] for i in range(0, T)]
+bidder.utility          = [[[] for i in range(0, T)] for _ in range(0,num_auctions)]
+bidder.avg_reward       = [[] for _ in range(0,T)]
+bidder.avg_utility      = [[] for _ in range(0,T)]
 bidder.loss             = [0 for i in range(0,bidder.bid_space)]
-bidder.alloc_func       = [[] for t in range(0,T)]
+bidder.alloc_func       = [[[] for t in range(0,T)] for _ in range(0,num_auctions)]
 bidder.pay_func         = [[] for t in range(0,T)]
-bidder.reward_func      = [[] for t in range(0,T)] 
+bidder.reward_func      = [[[] for t in range(0,T)]  for _ in range(0,num_auctions)]
 
 #this has to be returned as a list of all the regrets for all the rounds 
-exp3 = regret_exp3(bidder,T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy2)
+exp3 = regret_exp3(bidder,T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy2,num_auctions)
 
 final_winexp = [winexp[i] for i in range(min_num_rounds, max_num_rounds, step)]
 final_exp3 = [exp3[i] for i in range(min_num_rounds,max_num_rounds,step)]
@@ -63,6 +70,6 @@ plt.legend(loc='best')
 plt.xlabel('number of rounds')
 plt.ylabel('regret')
 plt.title('Regret Performance of WIN-EXP vs EXP3')
-plt.savefig('winexp_vs_exp3_one_learner.png')
+#plt.savefig('winexp_vs_exp3_one_learner_multiple_auctions.png')
 #plt.savefig('exp3.png')
 plt.show()

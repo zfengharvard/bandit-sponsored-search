@@ -12,7 +12,7 @@ import numpy as np
 # - alloc: 3D list with the realized allocation (size: num_auctions x num_rounds x bid_space)
 # - bid_space: number of arms
 # - algo_util: list with the utility that our algorithm has acquired for the submitted bid of the bidder (size: T) 
-def regret(cont, r_lst, alloc, bid_space, algo_util, T):
+def regret(cont, r_lst, alloc, bid_space, algo_util, T,num_auctions):
     if cont == 0: #discrete case
         # size of tmp: T x bid_space
         tmp = [[] for _ in range(0,T+1)]
@@ -23,13 +23,22 @@ def regret(cont, r_lst, alloc, bid_space, algo_util, T):
         #print ("alloc")
         #print alloc
 
+        #for t in range(0,T+1):
+        #    u_s = [0 for _ in range(0,bid_space)]
+        #    for b in range(0,bid_space):
+        #        u_s[b] += r_lst[t][b]*alloc[t][b] - 1
+        #    tmp[t] = u_s
+        
+        #print ("Utility inside regret for timestep T=%d"%T)
+        #print tmp
+
         for t in range(0,T+1):
             u_s = [0 for _ in range(0,bid_space)]
             for b in range(0,bid_space):
-                u_s[b] += r_lst[t][b]*alloc[t][b] - 1
-            tmp[t] = u_s
-        #print ("Utility inside regret for timestep T=%d"%T)
-        #print tmp
+                for auction in range(0,num_auctions):
+                    u_s[b] += r_lst[auction][t][b]*alloc[auction][t][b]    
+                tmp[t].append(u_s[b]/num_auctions-1)
+
 
         util = []
         for b in range(0,bid_space):
