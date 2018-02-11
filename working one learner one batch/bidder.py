@@ -20,7 +20,11 @@ class Bidder(object):
     # Each bidder has a unique id and we 
     # differentiate bidders based on that number.
     # Also, each bidder can choose a different discretization
+<<<<<<< HEAD:working one learner one batch/bidder.py
     def __init__(self, bidder_id, eps, T, outcome_space, num_repetitions):
+=======
+    def __init__(self, bidder_id, eps, T, outcome_space, num_repetitions,num_auctions):
+>>>>>>> 3214cc6385a61ccedcd58b04be77f68d4ceac55b:bidder.py
         self.id             = bidder_id
         self.eps            = eps
         self.bid_space      = int(1.0/self.eps) + 1
@@ -30,12 +34,24 @@ class Bidder(object):
         self.eta_winexp     = math.sqrt(2*math.log(self.bid_space,2)/(5*T))
         self.eta_exp3       = math.sqrt(1.0*(2*math.log(self.bid_space,2))/(T*self.bid_space))
         self.loss           = [0 for i in range(0,self.bid_space)]
+<<<<<<< HEAD:working one learner one batch/bidder.py
         self.utility        = [[] for i in range(0, T)]
         self.winexp_regret  = [0]*num_repetitions 
         self.exp3_regret    = [0]*num_repetitions
         self.alloc_func     = [[] for t in range(0,T)] 
         self.pay_func       = [[] for t in range(0,T)]
         self.reward_func    = [[] for t in range(0,T)]     # P[o_t]: probability of seeing outcome o_t
+=======
+        self.utility        = [[[] for i in range(0, T)] for _ in range(0,num_auctions)]
+        self.avg_utility    = [[] for i in range(0,T)]
+        self.avg_reward     = [[] for i in range(0,T)]
+        self.winexp_regret  = [0]*num_repetitions 
+        self.exp3_regret    = [0]*num_repetitions
+        self.alloc_func     = [[[] for t in range(0,T)] for _ in range(0,num_auctions)]
+        self.pay_func       = [[] for t in range(0,T)]
+        self.reward_func    = [[[] for t in range(0,T)] for _ in range(0,num_auctions)]
+    # P[o_t]: probability of seeing outcome o_t
+>>>>>>> 3214cc6385a61ccedcd58b04be77f68d4ceac55b:bidder.py
     # pi[b] is the probability of bid b being chosen
     # alloc[2] = x_t(1*eps), pi[2] = pi_t(1*eps)
     def prob_outcome(self,alloc):
