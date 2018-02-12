@@ -10,6 +10,7 @@ from runner_gexp3_all_bidders import *
 def regret_winexp(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, bids,num_auctions):
     f1 = "winexp_regrets.txt"
     winexp_regrets = open(f1, "w")
+    winexp_regrets.write("eps=%.5f\n"%bidder.eps)
     #winexp_regr is now a num_repetitionsxT matrix
     winexp_regr = []
     for rep in range(0, num_repetitions):
@@ -51,6 +52,7 @@ def regret_winexp(bidder, T,num_repetitions, num_bidders, num_slots, outcome_spa
 def regret_exp3(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values,bids,num_auctions):
     f2 = "exp3_regrets.txt"
     exp3_regrets = open(f2,"w")
+    exp3_regrets.write("eps=%.5f\n"%bidder.eps)
     #exp3_regr is now a num_repetitionsxT matrix
     exp3_regr = []
     for rep in range(0, num_repetitions):

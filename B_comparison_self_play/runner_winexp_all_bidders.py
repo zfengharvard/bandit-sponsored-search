@@ -32,12 +32,12 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
     algo_util = []
     temp_regr = []
     temp_bids = []
-    adaptive  = [i for i in range(0,num_adaptive)]
+    adaptive_lst = [i for i in range(0, num_adaptive)]
     #bids      = [[] for _ in range(0,T)]
     for t in range(0,T):
         bid_chosen = [0]*num_bidders
         for i in range(0,num_bidders):
-            if i in adaptive:
+            if i in adaptive_lst:
                 bid_chosen[i] = round(bidder[i].bidding(),2)
                 bids[t][i] = bid_chosen[i]
             else: 

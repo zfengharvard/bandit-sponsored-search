@@ -11,12 +11,13 @@ from runner_exp3_all_bidders import *
 def regret_winexp(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, num_auctions,bids,num_adaptive):
     f1 = "winexp_regrets.txt"
     winexp_regrets = open(f1, "w")
-    winexp_bids    = open("winexp_bids.txt", "w")
+    winexp_regrets.write("eps=%.5f\n"%bidder[0].eps)
     #winexp_regr is now a num_repetitionsxT matrix
     winexp_regr  = []
     bids_inside  = [[] for _ in range(0,num_repetitions)]
-    #print ("WINEXP")
+    print ("WINEXP")
     for rep in range(0, num_repetitions):
+        print ("Repetition = %d"%rep)
         #   at each repetition, a whole array of size T is returned: 
         #    This corresponds to the regrets for bidder 0 at each one of the T rounds
         
@@ -64,60 +65,63 @@ def regret_winexp(bidder, T,num_repetitions, num_bidders, num_slots, outcome_spa
 
     #print winexp_expected_bids
     #final_winexp_regr = [winexp_expected_regr[t]/t for t in range(1,T-1)]
-    #bidders      = [i for i in range(0, num_adaptive)]
-    #rounds       = [t for t in range(0,T,10)]
-    plotted_bids = [[winexp_expected_bids[i][t] for t in range(0,T)] for i in range(0,num_adaptive)]
-    for r in range(0,num_adaptive):
-        s = ""
-        for t in range(0,T):
-            s += ("%.5f "%plotted_bids[r][t])
-        s += "\n"
-        winexp_bids.write(s) 
+    bidders      = [i for i in range(0, num_adaptive)]
+    rounds       = [t for t in range(0,T,10)]
+    plotted_bids = [[winexp_expected_bids[i][t] for t in range(0,T,10)] for i in range(0,num_adaptive)]
     final_winexp_regr = winexp_expected_regr
-    #matplotlib.rcParams.update({'font.size': 17})
-    #fig = plt.figure()
-    #fig.set_figheight(10)
-    #fig.set_figwidth(10)
-    #plt.figure(1,figsize=(10,10))
+    matplotlib.rcParams.update({'font.size': 17})
+    fig1 = plt.figure()
+    fig1.set_figheight(10)
+    fig1.set_figwidth(10)
 
+    num_plots = num_adaptive
 
-    #num_plots = 3
+    colormap = plt.cm.gist_ncar
+    plt.gca().set_color_cycle([colormap(i) for i in np.linspace(0, 0.9, num_plots)])
 
-    #colormap = plt.cm.gist_ncar
-    #plt.gca().set_color_cycle([colormap(i) for i in np.linspace(0, 0.9, num_plots)])
+    labels = []
+    for i in range(0, num_plots):
+        if i == 0:
+            plt.plot(rounds, plotted_bids[i], 'ro')
+            plt.plot(rounds, plotted_bids[i], 'r-')
+        elif i == 1:
+            plt.plot(rounds, plotted_bids[i], 'go')
+            plt.plot(rounds, plotted_bids[i], 'g-')
+            labels.append(r'Bidder %d'%i)
+        else: 
+            plt.plot(rounds, plotted_bids[i], 'bo')
+            plt.plot(rounds, plotted_bids[i], 'b-')
+            labels.append(r'Bidder %d'%i)
 
-    #labels = []
-    #for i in range(1, num_plots):
-    #    plt.plot(rounds, plotted_bids[i], 'o')
-    #    plt.plot(rounds, plotted_bids[i], '-')
-    #    labels.append(r'Bidder' % i)
+    plt.legend(labels, ncol=4, loc='upper center', 
+               bbox_to_anchor=[0.5, 1.1], 
+               columnspacing=1.0, labelspacing=0.0,
+               handletextpad=0.0, handlelength=1.5,
+               fancybox=True, shadow=True)
 
-    #plt.legend(labels, ncol=4, loc='upper center', 
-    #           bbox_to_anchor=[0.5, 1.1], 
-    #           columnspacing=1.0, labelspacing=0.0,
-    #           handletextpad=0.0, handlelength=1.5,
-    #           fancybox=True, shadow=True)
-
+    #plt.plot(rounds, final_winexp, 'ro', label = 'WIN-EXP')
+    #plt.plot(rounds,final_winexp, 'r-')
+    #plt.plot(rounds, final_exp3, 'bs', label = 'EXP3')
+    #plt.plot(rounds,final_exp3, 'b-')
     #plt.legend(loc='best')
-    #plt.xlabel('number of rounds')
-    #plt.ylabel('bids')
-    #plt.title('Bids over time')
-    #plt.savefig('bids_winexp.png')
+    plt.xlabel('number of rounds')
+    plt.ylabel('bids')
+    plt.title('WINEXP Bids over time eps=%.5f'%bidder[0].eps)
+    plt.savefig('bids_winexp.png')
     winexp_regrets.close()
-    winexp_bids.close()
     return final_winexp_regr 
 
 
 def regret_exp3(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values,num_auctions,bids,num_adaptive):
     f2 = "exp3_regrets.txt"
     exp3_regrets = open(f2,"w")
-    exp3_bids    = open("exp3_bids.txt","w")
+    epx3_regrets.write("eps=%.5f\n"%bidder[0].eps)
     #exp3_regr is now a num_repetitionsxT matrix
     exp3_regr   = []
     bids_inside = [[] for _ in range(0,num_repetitions)]
-    #print ("EXP3")
+    print ("EXP3")
     for rep in range(0, num_repetitions):
-        #print ("Repetition rep %d for exp3"%rep)
+        print ("Repetition rep %d for exp3"%rep)
         # at each repetition, a whole array of size T is returned: This corresponds to the regrets at each one of the T rounds
         (returned_regret, returned_bids) = main_exp3(bidder,rep, T, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values,num_auctions,bids,num_adaptive)
         exp3_regr.append(returned_regret)
@@ -141,6 +145,13 @@ def regret_exp3(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space
     exp3_expected_regr = []
     for t in range(0,T):
         exp3_expected_regr.append(sum(d[t] for d in exp3_regr)/num_repetitions)
+    
+    for r in range(0,num_repetitions):
+        s = ""
+        for t in range(0,T):
+            s += ("%.5f "%exp3_regr[r][t])
+        s += "\n"
+        exp3_regrets.write(s) 
 
     #exp3_expected_bids = [ [0 for _ in range(0,T)] for _ in range(0,num_bidders)]
     exp3_expected_bids = [ [0 for _ in range(0,T)] for _ in range(0,num_adaptive)]
@@ -151,20 +162,54 @@ def regret_exp3(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space
             for rep in range(0, num_repetitions):
                 s_b += bids_inside[rep][t][i]
             exp3_expected_bids[i][t] = s_b/num_repetitions
+    
     #print exp3_expected_bids
-    #bidders      = [i for i in range(0, 3)]
-    #rounds       = [t for t in range(0,T,10)]
-    plotted_bids = [[exp3_expected_bids[i][t] for t in range(0,T)] for i in range(0,num_adaptive)]
-    for r in range(0,num_adaptive):
-        s = ""
-        for t in range(0,T):
-            s += ("%.5f "%plotted_bids[r][t])
-        s += "\n"
-        exp3_bids.write(s) 
+    bidders      = [i for i in range(0, num_adaptive)]
+    rounds       = [t for t in range(0,T,10)]
+    plotted_bids = [[exp3_expected_bids[i][t] for t in range(0,T,10)] for i in range(0,num_adaptive)]
     #print ("Inside master_file.py")
     #print ("Expected regret (div by num_repetitions)")
     final_exp3_regr = exp3_expected_regr
+    #print final_exp3_regr
+    matplotlib.rcParams.update({'font.size': 17})
+    fig2 = plt.figure()
+    fig2.set_figheight(10)
+    fig2.set_figwidth(10)
 
+
+    num_plots = num_adaptive
+
+    colormap = plt.cm.gist_ncar
+    plt.gca().set_color_cycle([colormap(i) for i in np.linspace(0, 0.9, num_plots)])
+
+    labels = []
+    for i in range(0, num_plots):
+        if i == 0:
+            plt.plot(rounds, plotted_bids[i], 'ro')
+            plt.plot(rounds, plotted_bids[i], 'r-')
+        elif i == 1:
+            plt.plot(rounds, plotted_bids[i], 'go')
+            plt.plot(rounds, plotted_bids[i], 'g-')
+            labels.append(r'Bidder %d'%i)
+        else: 
+            plt.plot(rounds, plotted_bids[i], 'bo')
+            plt.plot(rounds, plotted_bids[i], 'b-')
+            labels.append(r'Bidder %d'%i)
+
+    plt.legend(labels, ncol=4, loc='upper center', 
+               bbox_to_anchor=[0.5, 1.1], 
+               columnspacing=1.0, labelspacing=0.0,
+               handletextpad=0.0, handlelength=1.5,
+               fancybox=True, shadow=True)
+
+    #plt.plot(rounds, final_winexp, 'ro', label = 'WIN-EXP')
+    #plt.plot(rounds,final_winexp, 'r-')
+    #plt.plot(rounds, final_exp3, 'bs', label = 'EXP3')
+    #plt.plot(rounds,final_exp3, 'b-')
+    #plt.legend(loc='best')
+    plt.xlabel('number of rounds')
+    plt.ylabel('bids')
+    plt.title('EXP3 Bids over time eps=%.5f'%bidder[0].eps)
+    plt.savefig('bids_exp3.png')
     exp3_regrets.close()
-    exp3_bids.close()
     return (final_exp3_regr)
