@@ -30,8 +30,8 @@ def set_auction_params(T,num_repetitions,num_auctions):
     reserve = [[np.random.uniform(0,0.3) for i in range(0,T)] for _ in range(0, num_auctions)]   
     # value function for every slot
     # could be seen as the conversion rate for every slot
-    # size of values: num_auctions x T x num_slots
-    values = [[[np.random.uniform(0,1) for j in range(0,num_slots)] for _ in range(0,T)] for _ in range(0,num_auctions)]
+    # size of values: num_auctions x T x num_bidders 
+    values = [[[np.random.uniform(0,1) for j in range(0,num_bidders)] for _ in range(0,T)] for _ in range(0,num_auctions)]
     #print ("Rank Scores")
     #print rank_scores
     #print ("CTR")

@@ -44,7 +44,7 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
             #print ("pay func")
             #print bidder.pay_func
     
-            bidder.reward_func[auction][t] = compute_reward(bidder.alloc_func[auction][t], bidder.pay_func[t], ctr[auction][t], values[auction][t])
+            bidder.reward_func[auction][t] = compute_reward(bidder.alloc_func[auction][t], bidder.pay_func[t], ctr[auction][t], values[auction][t][0])
             #print ("Bidder's Reward function")
             #print bidder.reward_func
             #### EXP3 computations ####
