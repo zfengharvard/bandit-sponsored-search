@@ -6,14 +6,14 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 
-num_repetitions = 10
+num_repetitions = 2
 winexp = [] 
 exp3 = []
 min_num_rounds = 0
-max_num_rounds = 1000
+max_num_rounds = 30
 step = 10
-num_auctions = 10
-rounds = [T for T in range(min_num_rounds,max_num_rounds, step)]
+num_auctions = 2
+rounds = [T for T in range(min_num_rounds,max_num_rounds)]
 
 #initialize the bidders once for the maximum number of rounds 
 T = max_num_rounds
@@ -38,7 +38,7 @@ cpy1 = deepcopy(bids)
 cpy2 = deepcopy(bids)
 cp3  = deepcopy(bids)
 #winexp regret has to be returned as a list of all the regrets for all the rounds
-winexp = regret_winexp(bidder, T, num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy1, num_auctions)
+(winexp, winexp_regrets) = regret_winexp(bidder, T, num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy1, num_auctions)
 
 bidder.pi               = [1.0/bidder.bid_space for j in range(0, bidder.bid_space)]
 bidder.weights          = [1 for j in range(0, bidder.bid_space)]
@@ -52,7 +52,7 @@ bidder.pay_func         = [[] for t in range(0,T)]
 bidder.reward_func      = [[[] for t in range(0,T)]  for _ in range(0,num_auctions)]
 
 #this has to be returned as a list of all the regrets for all the rounds 
-exp3 = regret_exp3(bidder,T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy2,num_auctions)
+(exp3, exp3_regrets) = regret_exp3(bidder,T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy2,num_auctions)
 
 #bidder.pi               = [1.0/bidder.bid_space for j in range(0, bidder.bid_space)]
 #bidder.weights          = [1 for j in range(0, bidder.bid_space)]
@@ -67,8 +67,14 @@ exp3 = regret_exp3(bidder,T,num_repetitions, num_bidders, num_slots, outcome_spa
 
 #gexp3 = regret_gexp3(bidder,T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy2,num_auctions)
 
-final_winexp = [winexp[i] for i in range(min_num_rounds, max_num_rounds, step)]
-final_exp3   = [exp3[i] for i in range(min_num_rounds,max_num_rounds,step)]
+final_winexp            =  np.array([winexp[i] for i in range(min_num_rounds, max_num_rounds)])
+winexp_arr              =  np.array(winexp_regrets) #size repetitions x T
+winexp_10_percentile    =  [np.percentile(winexp_arr[:,t],10) for t in range(0,T)]
+winexp_90_percentile    =  [np.percentile(winexp_arr[:,t],90) for t in range(0,T)]
+final_exp3              =  np.array([exp3[i] for i in range(min_num_rounds,max_num_rounds)])
+exp3_arr                =  np.array(exp3_regrets) #size repetitions x T
+exp3_10_percentile      =  [np.percentile(exp3_arr[:,t],10) for t in range(0,T)]
+exp3_90_percentile      =  [np.percentile(exp3_arr[:,t],90) for t in range(0,T)]
 #final_gexp3  = [gexp3[i] for i in range(min_num_rounds,max_num_rounds,step)]
 
 #print ("final_ex3")
@@ -79,16 +85,15 @@ fig = plt.figure()
 fig.set_figheight(10)
 fig.set_figwidth(10)
 plt.figure(1,figsize=(10,10))
-plt.plot(rounds, final_winexp, 'ro', label = 'WIN-EXP')
-plt.plot(rounds,final_winexp, 'r-')
-plt.plot(rounds, final_exp3, 'bs', label = 'EXP3')
-plt.plot(rounds,final_exp3, 'b-')
-#plt.plot(rounds, final_gexp3, 'g^', label = 'gEXP3')
-#plt.plot(rounds,final_gexp3, 'g-')
+#plt.plot(rounds, final_winexp, 'ro', label = 'WIN-EXP')
+plt.plot(rounds, final_winexp, 'r-', label = 'WIN-EXP')
+plt.fill_between(rounds, winexp_10_percentile, winexp_90_percentile,facecolor='yellow', alpha=0.5)
+plt.plot(rounds, final_exp3, 'b-', label = 'EXP3')
+plt.fill_between(rounds, exp3_10_percentile, exp3_90_percentile,facecolor='cyan', alpha=0.5)
 plt.legend(loc='best')
 plt.xlabel('number of rounds')
 plt.ylabel('regret')
 plt.title('Regret Performance of WIN-EXP vs EXP3')
-plt.savefig('winexp_vs_exp3_vs_gexp3_one_learner_multiple_auctions_oblivious.png')
+plt.savefig('oblivious.png')
 #plt.savefig('exp3.png')
 plt.show()
