@@ -52,7 +52,7 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
                 bidder[i].alloc_func[auction][t] = [GSP(ctr[auction][t], reserve[auction][t], bids[t], rank_scores[auction][t], num_slots, num_bidders).alloc_func(bidder[i].id, bid*bidder[i].eps) for bid in range(0, bidder[i].bid_space)]
                 bid_vec = deepcopy(bids[t])
                 bidder[i].pay_func[t] = [GSP(ctr[auction][t], reserve[auction][t], bid_vec, rank_scores[auction][t], num_slots, num_bidders).pay_func(bidder[i].id, bid*bidder[i].eps) for bid in range(0, bidder[i].bid_space)]  
-                bidder[i].reward_func[auction][t] = compute_reward(bidder[i].alloc_func[auction][t], bidder[i].pay_func[t], ctr[auction][t], values[auction][t])
+                bidder[i].reward_func[auction][t] = compute_reward(bidder[i].alloc_func[auction][t], bidder[i].pay_func[t], ctr[auction][t], values[auction][t][bidder[i].id])
 
 
             #bidder.alloc_func[auction][t] = [GSP(ctr[auction][t], reserve[auction][t], bids[t], rank_scores[auction][t], num_slots, num_bidders).alloc_func(bidder.id, bid*bidder.eps) for bid in range(0, bidder.bid_space)]

@@ -22,7 +22,7 @@ def compute_reward(allocation_func, payment_func, ctr, values):
         if b in ctr:
             # If bidder isn't allocated any slot: b == 0
             # However, b == 0 also if the CTR of the position is 0
-            reward_lst.append(values[ctr.index(b)] - payment_func[allocation_func.index(b)])
+            reward_lst.append(values - payment_func[allocation_func.index(b)])
         else :
             reward_lst.append(-1)
     return reward_lst
@@ -44,6 +44,7 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
                 bid_chosen[i] = bids[t][i]
 
         # same bid over all auctions that run at the same timestep
+        auctions_won = 0
         for auction in range(0,num_auctions):
             #print ("all bids at timestep t=%d"%t)
             #bids[t] = bid_chosen
@@ -56,10 +57,11 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
                 bidder[i].alloc_func[auction][t] = [GSP(ctr[auction][t], reserve[auction][t], bids[t], rank_scores[auction][t], num_slots, num_bidders).alloc_func(bidder[i].id, bid*bidder[i].eps) for bid in range(0, bidder[i].bid_space)]
                 bid_vec = deepcopy(bids[t])
                 bidder[i].pay_func[t] = [GSP(ctr[auction][t], reserve[auction][t], bid_vec, rank_scores[auction][t], num_slots, num_bidders).pay_func(bidder[i].id, bid*bidder[i].eps) for bid in range(0, bidder[i].bid_space)]  
-                bidder[i].reward_func[auction][t] = compute_reward(bidder[i].alloc_func[auction][t], bidder[i].pay_func[t], ctr[auction][t], values[auction][t])
+                bidder[i].reward_func[auction][t] = compute_reward(bidder[i].alloc_func[auction][t], bidder[i].pay_func[t], ctr[auction][t], values[auction][t][bidder[i].id])
                 if bidder[i].id == 0:
                     # Only the learner follows WINEXP
                     if bidder[i].alloc_func[auction][t][int(math.ceil(bids[t][bidder[i].id]/bidder[i].eps))] != 0:
+                        auctions_won += 1
                         bidder[i].utility[auction][t] = (bidder[i].compute_utility(1, bidder[i].reward_func[auction][t], bidder[i].alloc_func[auction][t]))
                     else: 
                         bidder[i].utility[auction][t] = (bidder[i].compute_utility(0, bidder[i].reward_func[auction][t], bidder[i].alloc_func[auction][t]))
@@ -80,7 +82,7 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
                     r_s[b] += bidder[i].reward_func[auction][t][b]*bidder[i].alloc_func[auction][t][b]
                 #bidder.avg_utility[t].append(u_s[b]/num_auctions - 1) 
                 if bidder[i].id == 0:
-                    bidder[i].avg_utility[t].append(u_s[b]/num_auctions)
+                    bidder[i].avg_utility[t].append(u_s[b]/num_auctions + (num_auctions - auctions_won)/(num_auctions))
                     bidder[i].avg_reward[t].append(r_s[b]/num_auctions)
                 else: 
                     bidder[i].avg_utility[t].append(r_s[b]/num_auctions -1)

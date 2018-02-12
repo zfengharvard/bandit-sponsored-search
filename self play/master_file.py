@@ -105,7 +105,7 @@ def regret_winexp(bidder, T,num_repetitions, num_bidders, num_slots, outcome_spa
     #plt.savefig('bids_winexp.png')
     winexp_regrets.close()
     winexp_bids.close()
-    return final_winexp_regr 
+    return (final_winexp_regr, winexp_regr)
 
 
 def regret_exp3(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values,num_auctions,bids,num_adaptive):
@@ -167,4 +167,4 @@ def regret_exp3(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space
 
     exp3_regrets.close()
     exp3_bids.close()
-    return (final_exp3_regr)
+    return (final_exp3_regr, exp3_regr)
