@@ -17,7 +17,7 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
     algo_util  = []
     temp_regr  = []
     for t in range(0,T):
-        bid_chosen = round(bidder.bidding(),2)
+        bid_chosen = bidder.bidding()
         # the bid chosen by the learner is the same for all auctions in the batch
         for auction in range(0,num_auctions):
             #bid_chosen = round(np.random.uniform(0,1),1)
@@ -44,7 +44,7 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
             #print ("pay func")
             #print bidder.pay_func
     
-            bidder.reward_func[auction][t] = compute_reward(bidder.alloc_func[auction][t], bidder.pay_func[t], ctr[auction][t], values[auction][t])
+            bidder.reward_func[auction][t] = compute_reward(bidder.alloc_func[auction][t], bidder.pay_func[t], ctr[auction][t], values[auction][t][0])
             #print ("Bidder's Reward function")
             #print bidder.reward_func
             #### EXP3 computations ####

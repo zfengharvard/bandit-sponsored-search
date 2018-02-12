@@ -46,7 +46,7 @@ def regret_winexp(bidder, T,num_repetitions, num_bidders, num_slots, outcome_spa
     #final_winexp_regr = [winexp_expected_regr[t]/t for t in range(1,T-1)]
     final_winexp_regr = winexp_expected_regr
     winexp_regrets.close()
-    return final_winexp_regr 
+    return (final_winexp_regr, winexp_regr)
 
 
 def regret_exp3(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values,bids,num_auctions):
@@ -98,7 +98,7 @@ def regret_exp3(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space
     final_exp3_regr = exp3_expected_regr
     #print final_exp3_regr
     exp3_regrets.close()
-    return (final_exp3_regr)
+    return (final_exp3_regr, exp3_regr)
 
 
 def regret_gexp3(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values,bids,num_auctions):

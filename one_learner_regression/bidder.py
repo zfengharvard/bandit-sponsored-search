@@ -20,7 +20,7 @@ class Bidder(object):
     # Each bidder has a unique id and we 
     # differentiate bidders based on that number.
     # Also, each bidder can choose a different discretization
-    def __init__(self, bidder_id, eps, T, outcome_space, num_repetitions):
+    def __init__(self, bidder_id, eps, T, outcome_space, num_repetitions, num_auctions):
         self.id             = bidder_id
         self.eps            = eps
         self.bid_space      = int(1.0/self.eps) + 1
@@ -29,16 +29,18 @@ class Bidder(object):
         self.weights        = [1 for i in range(0,self.bid_space)]
         self.eta_winexp     = math.sqrt(2*math.log(self.bid_space,2)/(5*T))
         self.eta_exp3       = math.sqrt(1.0*(2*math.log(self.bid_space,2))/(T*self.bid_space))
+        self.eta_gexp3      = 0.95*math.sqrt(math.log(self.bid_space,2)/(T*self.bid_space))
+        self.beta           = math.sqrt(math.log(self.bid_space,2)*(1/0.01)/(T*self.bid_space))
         self.loss           = [0 for i in range(0,self.bid_space)]
-        self.utility        = [[] for i in range(0, T)]
+        self.utility        = [[[] for i in range(0, T)] for _ in range(0,num_auctions)]
         self.winexp_regret  = [0]*num_repetitions 
         self.exp3_regret    = [0]*num_repetitions
-        self.alloc_func     = [[] for t in range(0,T)] 
-        self.bid_chosen     = []
-        self.allocated      = []
-        self.paid           = []
+        self.gexp3_regret   = [0]*num_repetitions
+        self.avg_reward     = [[] for _ in range(0,T)]
+        self.avg_utility    = [[] for _ in range(0,T)]
+        self.alloc_func     = [[[] for t in range(0,T)] for _ in range(0,num_auctions)]
         self.pay_func       = [[] for t in range(0,T)]
-        self.reward_func    = [[] for t in range(0,T)]     # P[o_t]: probability of seeing outcome o_t
+        self.reward_func    = [[[] for t in range(0,T)] for _ in range(0,num_auctions)]    # P[o_t]: probability of seeing outcome o_t
     # pi[b] is the probability of bid b being chosen
     # alloc[2] = x_t(1*eps), pi[2] = pi_t(1*eps)
     def prob_outcome(self,alloc):
@@ -69,6 +71,11 @@ class Bidder(object):
     # Returns the bid (==arm*eps) (to be submitted to the auctioneer)
     def bidding(self):
         bid              = draw(self.pi)
+        return (bid*self.eps)
+    
+    def gbidding(self, weights,gamma):
+        probs            = distr(weights,gamma)
+        bid              = draw_gexp3(probs)
         return (bid*self.eps)
 
     # Updating the estimated loss (according to exp3) of the particular arm
