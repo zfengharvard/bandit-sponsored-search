@@ -7,14 +7,14 @@ from runner_exp3_all_bidders import *
 from runner_gexp3_all_bidders import *
 
 
-def regret_winexp(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, bids,num_auctions):
+def regret_winexp(bidder, T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, bids,num_auctions,threshold):
     f1 = "winexp_regrets.txt"
     winexp_regrets = open(f1, "w")
     #winexp_regr is now a num_repetitionsxT matrix
     winexp_regr = []
     for rep in range(0, num_repetitions):
         # at each repetition, a whole array of size T is returned: This corresponds to the regrets at each one of the T rounds
-        winexp_regr.append(main_winexp(bidder,rep, T, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values,bids,num_auctions))
+        winexp_regr.append(main_winexp(bidder,rep, T, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values,bids,num_auctions, threshold))
         #print ("Current Regrets")
         #print winexp_regr[rep]
         bidder.pi             = [1.0/bidder.bid_space for j in range(0,bidder.bid_space)]

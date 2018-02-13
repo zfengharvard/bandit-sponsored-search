@@ -7,8 +7,8 @@ import numpy as np
 import random
 
 def set_auction_params(T,num_repetitions,num_auctions):
-    num_bidders         = 100
-    num_slots           = 10
+    num_bidders         = 20
+    num_slots           = 3
     outcome_space       = 2
     #Create the rank scores. Size of rank_scores: num_auctions x T x num_bidders
     rank_scores = [[[np.random.uniform(0,1) for i in range(0,num_bidders)] for j in range(0,T)] for _ in range(0,num_auctions)]
@@ -32,14 +32,13 @@ def set_auction_params(T,num_repetitions,num_auctions):
     # could be seen as the conversion rate for every slot
     # size of values: num_auctions x T x num_bidders 
     values = [[[np.random.uniform(0,1) for j in range(0,num_bidders)] for _ in range(0,T)] for _ in range(0,num_auctions)]
-    #print ("Rank Scores")
-    #print rank_scores
-    #print ("CTR")
-    #print ctr
-    #print ("reserve")
-    #print reserve
-    #print ("values")
-    #print values
 
+    # threshold ctr to decide whether or you get clicked or not
+    #threshold = [np.random.uniform(0,0.3) for _ in range(0,T)]
+    threshold = [0]*T
+    print ("CTR")
+    print ctr
+    print ("threshold")
+    print threshold
 
-    return (num_bidders, num_slots, outcome_space,rank_scores, ctr, reserve, values)
+    return (num_bidders, num_slots, outcome_space,rank_scores, ctr, reserve, values, threshold)
