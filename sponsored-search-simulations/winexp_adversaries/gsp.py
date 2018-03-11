@@ -13,9 +13,6 @@ import math
 
 
 class GSP(object):
-    """
-    Implements the generalized second price auction mechanism.
-    """
     ##########
     # ctr: a vector of click-through-rate
     # r: rankscore reserve
