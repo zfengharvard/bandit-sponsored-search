@@ -48,7 +48,7 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
                     bidder[i].pi[arm_chosen[i]] = 0.0000000001
                 estimated_loss = bidder[i].utility[t][arm_chosen[i]]/bidder[i].pi[arm_chosen[i]]
                 bidder[i].loss[arm_chosen[i]] += estimated_loss
-                arr = [bidder[i].eta_exp3*bidder[i].loss[b] for b in range(0,bidder[i].bid_space)]
+                arr = np.array([bidder[i].eta_exp3*bidder[i].loss[b] for b in range(0,bidder[i].bid_space)], dtype=np.float128)
                 bidder[i].weights = np.exp(arr)
                 bidder[i].pi = [bidder[i].weights[b]/sum(bidder[i].weights) for b in range(0,bidder[i].bid_space)]
             else: 
