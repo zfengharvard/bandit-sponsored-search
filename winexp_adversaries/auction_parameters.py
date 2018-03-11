@@ -15,7 +15,7 @@ def set_auction_params(T,num_repetitions):
     rank_scores = [[np.random.uniform(0,1) for i in range(0,num_bidders)] for _ in range(0,T)]  
     # at every t, the rank scores are the same, irrespective of the auction that we're currently participating in
     #size of CTR: T x num_slots
-    ctr  = [[np.random.uniform(0.1,1) for _ in range(0,num_slots)] for _ in range(0,T)] 
+    ctr  = [[np.random.uniform(0.5,1) for _ in range(0,num_slots)] for _ in range(0,T)] 
     for t in range(0, T):
         ctr[t].sort(reverse=True)
     
