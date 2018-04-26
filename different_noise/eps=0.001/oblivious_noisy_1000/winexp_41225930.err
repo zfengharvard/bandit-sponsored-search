@@ -1,0 +1,4 @@
+discarding /n/sw/fasrcsw/apps/Core/Anaconda/2.5.0-fasrc01/x/bin from PATH
+prepending /n/home02/podimata/.conda/envs/charapod/bin to PATH
+/n/home02/podimata/.conda/envs/charapod/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
