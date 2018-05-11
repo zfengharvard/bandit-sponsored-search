@@ -6,6 +6,7 @@ Code for reproducing experimental results from our paper: \<place link to paper 
 
 * Python 2.7.13
 * conda 4.4.10 
+* RStudio (if you want to run the plotters)
 
 ## Implementation
 
