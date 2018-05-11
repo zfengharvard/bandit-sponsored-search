@@ -7,12 +7,12 @@ import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 plt.switch_backend('agg')
 
-num_repetitions = 10
+num_repetitions = 30
 winexp = [] 
 exp3 = []
 min_num_rounds = 0
-max_num_rounds = 5
-num_adaptive = 10000
+max_num_rounds = 5000
+num_adaptive = 4
 step = 1
 rounds = [T for T in range(min_num_rounds,max_num_rounds, step)]
 matplotlib.rcParams.update({'font.size': 17})
@@ -43,12 +43,6 @@ for epsilon in eps_list:
     
     (winexp, winexp_regrets) = regret_winexp(bidder_winexp, T, num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy1, threshold,noise,num_adaptive)
     
-    print ("epsilon for winexp")
-    print bidder_winexp[0][0].eps
-
-
     (exp3, exp3_regrets) = regret_exp3(bidder_exp3,T,num_repetitions, num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values, cpy2,threshold, noise, num_adaptive)
 
-    print ("epsilon for exp3")
-    print bidder_exp3[0][0].eps
 
