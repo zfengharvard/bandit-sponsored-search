@@ -11,7 +11,7 @@ num_repetitions = 30
 winexp = [] 
 exp3 = []
 min_num_rounds = 0
-max_num_rounds = 50000
+max_num_rounds = 5000
 step = 1
 rounds = [T for T in range(min_num_rounds,max_num_rounds, step)]
 matplotlib.rcParams.update({'font.size': 17})

@@ -27,8 +27,6 @@ def normalize(A, bid_space,c,d):
 def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values,bids,threshold,noise):
     algo_util  = []
     temp_regr  = []
-    #print ("Threshold inside exp3")
-    #print threshold
     clean_alloc = [[] for _ in range(0,T)]
     for t in range(0,T):
         bid_chosen          = bidder.bidding()
@@ -43,7 +41,6 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
 
         noise_cp = deepcopy(noise)
         bidder.alloc_func[t] = noise_mask(temp_alloc,noise_cp[t],ctr[t], num_slots)
-        #bidder.alloc_func[t] = temp
         #reward function: value - payment(coming from GSP module)
         bidder.pay_func[t]   = [gsp_instance.pay_func(bidder.id, bid*bidder.eps) for bid in range(0, bidder.bid_space)]       
         if allocated > threshold[t]:    
@@ -52,22 +49,20 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
             bidder.reward_func[t] = [0 for _ in range(0,bidder.bid_space)]
 
 
-        temp_reward = deepcopy(bidder.reward_func[t])
-        bidder.utility[t] = normalize(temp_reward, bidder.bid_space, 0,1)
+        bidder.utility[t] = bidder.reward_func[t]
 
         #weights update
         arm_chosen = int(math.ceil(bids[t][0]/bidder.eps))
         
         if bidder.pi[arm_chosen] < 0.0000000001:
             bidder.pi[arm_chosen] = 0.0000000001
-        estimated_loss = bidder.utility[t][arm_chosen]/bidder.pi[arm_chosen]
+        estimated_loss = -bidder.utility[t][arm_chosen]/bidder.pi[arm_chosen] # loss is now in [-1,1]
         bidder.loss[arm_chosen] += estimated_loss
-        arr = np.array([(-bidder.eta_exp3)*bidder.loss[b] for b in range(0,bidder.bid_space)], dtype=np.float128)
+        arr = np.array([-(bidder.eta_exp3)*bidder.loss[b] for b in range(0,bidder.bid_space)], dtype=np.float128)
         bidder.weights = np.exp(arr)
         bidder.pi = [bidder.weights[b]/sum(bidder.weights) for b in range(0,bidder.bid_space)]
         
         
-        #algo_util.append((bidder.reward_func[t][arm_chosen]*bidder.alloc_func[t][arm_chosen]))
         algo_util.append((bidder.reward_func[t][arm_chosen]*clean_alloc[t][arm_chosen]))
         temp_regr.append(regret(bidder.reward_func,clean_alloc,bidder.bid_space, algo_util,t))    
 

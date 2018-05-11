@@ -34,8 +34,6 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
     algo_util = []
     temp_regr = []
     clean_alloc = [[] for _ in range(0,T)]
-    #print ("Threshold inside winexp")
-    #print threshold
     for t in range(0,T):
         bid_chosen = bidder.bidding()
         bids[t][0] = bid_chosen
@@ -50,14 +48,12 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
         # bidder sees noisy data as his allocation
         noise_cp = deepcopy(noise)
         bidder.alloc_func[t] = noise_mask(temp, noise_cp[t], ctr[t], num_slots)
-        #bidder.alloc_func[t] = temp
         
         #reward function: value - payment(coming from GSP module)
         bidder.pay_func[t] = [gsp_instance.pay_func(bidder.id, bid*bidder.eps) for bid in range(0, bidder.bid_space)]  
         #### WIN-EXP computations ####
         # computation of reward will only be used for the regret
         if allocated > threshold[t]:    
-            # reward will also be noisy
             bidder.reward_func[t] = [(values[t][0] - bidder.pay_func[t][b]) for b in range(0,bidder.bid_space)] 
             bidder.utility[t] = bidder.compute_utility(1, bidder.reward_func[t], bidder.alloc_func[t])
         else:
@@ -69,10 +65,7 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
         # for each auction (at the same t) you choose the same arm
         arm_chosen = int(math.ceil(bids[t][bidder.id]/bidder.eps))   
 
-        #algo_util.append((bidder.reward_func[t][arm_chosen]*bidder.alloc_func[t][arm_chosen]))
         algo_util.append((bidder.reward_func[t][arm_chosen]*clean_alloc[t][arm_chosen]))
-        #print ("Algorithm's average utility")
-        #print algo_util
         temp_regr.append(regret(bidder.reward_func,clean_alloc,bidder.bid_space, algo_util,t))    
 
     return temp_regr   

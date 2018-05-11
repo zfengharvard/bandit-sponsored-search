@@ -3,7 +3,7 @@
 #SBATCH -N 1 # Ensure that all cores are on one machine
 #SBATCH -t 7-00:00 # Runtime in D-HH:MM
 #SBATCH -p shared # Partition to submit to
-#SBATCH --mem=128000# Memory pool for all cores (see also --mem-per-cpu)
+#SBATCH --mem=100000# Memory pool for all cores (see also --mem-per-cpu)
 #SBATCH -o winexp_%j.out # File to which STDOUT will be written
 #SBATCH -e winexp_%j.err # File to which STDERR will be written
 
