@@ -83,16 +83,13 @@
     ind2 = seq(1, 30000, 500)
     
     df_step = df_aggr[ind,]
-    #print (typeof(df_step))
     df_step2 = df_aggr[ind2,]
    
 
     ggplot(df_step) +
       geom_ribbon(aes(x = T, ymin = y_low, ymax = y_high, fill=Algorithm), alpha=0.1) + guides(fill=FALSE) +
-      #geom_errorbar(aes(x = c_s, ymin = y_low, ymax = y_high), width=0.05, color = 'black', size = 0.1) +
       geom_line(aes(x=T, y=avg_regr, color = Algorithm, linetype = Algorithm), size = 1) +
       geom_point(data=df_step2, aes(x=T, y=avg_regr, color = Algorithm, shape=Algorithm), size = 3) +
-      #scale_x_continuous(breaks = seq(0, 5000, 100))+
       scale_y_continuous(
         breaks = c(0,10,20,30,40,50,60,70,80,90,100)
       )+
