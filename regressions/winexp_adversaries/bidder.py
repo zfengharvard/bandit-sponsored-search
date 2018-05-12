@@ -28,7 +28,7 @@ class Bidder(object):
         self.pi             = [1.0/self.bid_space for i in range(0,self.bid_space)]
         self.weights        = [1 for i in range(0,self.bid_space)]
         self.eta_winexp     = math.sqrt(2*math.log(self.bid_space,2)/(5*T))
-        self.eta_exp3       = math.sqrt(1.0*(2*math.log(self.bid_space,2))/(T*self.bid_space))
+        self.eta_exp3       = math.sqrt(1.0*(math.log(self.bid_space,2))/(T*self.bid_space))
         self.eta_gexp3      = 0.95*math.sqrt(math.log(self.bid_space,2)/(T*self.bid_space))
         self.beta           = math.sqrt(math.log(self.bid_space,2)*(1/0.01)/(T*self.bid_space))
         self.loss           = [0 for i in range(0,self.bid_space)]
@@ -44,10 +44,6 @@ class Bidder(object):
     # pi[b] is the probability of bid b being chosen
     # alloc[2] = x_t(1*eps), pi[2] = pi_t(1*eps)
     def prob_outcome(self,alloc):
-        #print ("Allocation inside prob outcome")
-        #print alloc
-        #print ("Probabilities inside prob outcome")
-        #print self.pi
         p   = [self.pi[b]*alloc[b] for b in range(0,self.bid_space)]
         return sum(p)
         

@@ -1,7 +1,5 @@
 import numpy as np
 import math
-#import matplotlib.pyplot as plt
-#import matplotlib
 from sklearn import linear_model, decomposition, datasets
 from sklearn.linear_model import Ridge
 from sklearn.preprocessing import PolynomialFeatures
@@ -45,9 +43,7 @@ def compute_payment_function(bids, payment, bid_space,eps):
     x = np.array(bids)
     y = np.array(payment)
     X = x[:, np.newaxis]
-    #X_plot = x_plot[:, np.newaxis]
 
-    #plt.scatter(x, y, color='blue', s=30, marker='o', label="training points")
 
     degree = 1
     model = make_pipeline(PolynomialFeatures(degree), Ridge())
@@ -57,8 +53,4 @@ def compute_payment_function(bids, payment, bid_space,eps):
     Bb = b[:, np.newaxis]
     
     y_plot = model.predict(Bb)
-    #plt.plot(Bb, y_plot, color='red', linewidth=2, label="degree %d" % degree)
-
-    #plt.legend(loc='lower left')
-    #plt.show()
     return (y_plot)

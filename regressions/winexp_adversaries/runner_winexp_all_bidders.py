@@ -49,7 +49,6 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
     clean_pay   = [[] for _ in range(0,T)]
     clean_reward = [[] for _ in range(0,T)]
     for t in range(0,T):
-        print ("t=%d"%t)
         bid_chosen = [bidder[i].bidding() for i in range(0,num_adaptive)]
         for i in range(0,num_adaptive): 
             bids[t][i] = bid_chosen[i]
@@ -57,8 +56,6 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
         gsp_instance =GSP(ctr[t], reserve[t], bid_vec, rank_scores[t], num_slots, num_bidders) 
 
         arm_chosen = [int(math.ceil(bids[t][i]/bidder[i].eps)) for i in range(0,num_adaptive)] 
-        print ("arm chosen 1:")
-        print arm_chosen
         for i in range(0,num_adaptive):
             allocated = gsp_instance.alloc_func(bidder[i].id, bids[t][bidder[i].id])
             temp      = [gsp_instance.alloc_func(bidder[i].id, bid*bidder[i].eps)  for bid in range(0, bidder[i].bid_space)]
@@ -102,8 +99,6 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
         temp_regr.append(regret(clean_reward,clean_alloc,bidder[0].bid_space, algo_util,t))    
         
 
-    print ("temp_regr")
-    print temp_regr
     return temp_regr   
 
 

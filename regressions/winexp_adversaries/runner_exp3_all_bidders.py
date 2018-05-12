@@ -16,8 +16,6 @@ from regressions import *
 def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_scores, ctr, reserve, values,bids,threshold,noise,num_adaptive):
     algo_util  = []
     temp_regr  = []
-    #print ("Threshold inside exp3")
-    #print threshold
     clean_alloc  = [[] for _ in range(0,T)]
     clean_pay    = [[] for _ in range(0,T)]
     clean_reward = [[] for _ in range(0,T)]
@@ -35,7 +33,6 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
             if (i == 0):
                 clean_alloc[t] = deepcopy(temp)
             noise_cp = deepcopy(noise)
-            #bidder.alloc_func[t] = temp
             #reward function: value - payment(coming from GSP module)
             arm_chosen[i] = int(math.ceil(bids[t][i]/bidder[i].eps))
             temp_pay = [gsp_instance.pay_func(bidder[i].id, bid*bidder[i].eps) for bid in range(0, bidder[i].bid_space)]  
@@ -44,20 +41,17 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
                 bidder[i].pay_func[t]   = temp_pay
                 if allocated > threshold[t]:    
                     bidder[i].reward_func[t] = [(values[t][i] - bidder[i].pay_func[t][b]) for b in range(0,bidder[i].bid_space)] 
-                    #TODO check here if this need to be multiplied by alloc
-                    #bidder.utility[t]     = [(bidder.reward_func[t][b] - 1) for b in range(0,bidder.bid_space)]
                 else:
                     bidder[i].reward_func[t] = [0 for _ in range(0,bidder[i].bid_space)]
-                    #bidder.utility[t]     = [(bidder.reward_func[t][b] - 1) for b in range(0,bidder.bid_space)]
 
 
-                bidder[i].utility[t] = normalize(bidder[i].reward_func[t], bidder[i].bid_space, 0,1)
+                bidder[i].utility[t] = bidder[i].reward_func[t]
 
                 #weights update
                 
                 if bidder[i].pi[arm_chosen[i]] < 0.0000000001:
                     bidder[i].pi[arm_chosen[i]] = 0.0000000001
-                estimated_loss = bidder[i].utility[t][arm_chosen[i]]/bidder[i].pi[arm_chosen[i]]
+                estimated_loss = -bidder[i].utility[t][arm_chosen[i]]/bidder[i].pi[arm_chosen[i]]
                 bidder[i].loss[arm_chosen[i]] += estimated_loss
                 arr = np.array([(-bidder[i].eta_exp3)*bidder[i].loss[b] for b in range(0,bidder[i].bid_space)], dtype=np.float128)
                 bidder[i].weights = np.exp(arr)
@@ -86,8 +80,6 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
         
                 (bidder[i].weights, bidder[i].pi) = bidder[i].weights_update_winexp(bidder[i].eta_winexp, bidder[i].utility[t])        
 
-                
-        
         
         algo_util.append((bidder[0].reward_func[t][arm_chosen[0]]*clean_alloc[t][arm_chosen[0]]))
         temp_regr.append(regret(bidder[0].reward_func,clean_alloc,bidder[0].bid_space, algo_util,t))    
