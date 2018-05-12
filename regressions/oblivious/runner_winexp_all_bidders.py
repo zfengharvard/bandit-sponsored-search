@@ -81,7 +81,7 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
             bidder.payment[t]                   = 0 
             bidder.pay_func[t]                  = [0]*bidder.bid_space
             bidder.reward_func[t]               = [0 for _ in range(0,bidder.bid_space)]
-            clean_reward[t]                     = bidder.reward_func[t]
+            clean_reward[t]                     = [0 for _ in range(0,bidder.bid_space)]
             bidder.utility[t]                   = (bidder.compute_utility(0, bidder.reward_func[t], bidder.alloc_func[t]))
 
 
@@ -89,7 +89,6 @@ def main_winexp(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_s
 
         # utility of algorithm computed as if we knew everything
         algo_util.append(clean_reward[t][arm_chosen]*clean_alloc[t][arm_chosen])
-
         temp_regr.append(regret(clean_reward,clean_alloc,bidder.bid_space, algo_util,t))    
 
     return temp_regr   

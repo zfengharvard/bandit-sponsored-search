@@ -24,30 +24,6 @@ def regret(r_lst, alloc, bid_space, algo_util, T):
         
 
     max_util_hindsight = np.max(util)
-    print ("Algorithm's Utility: %f"%(sum(algo_util)))
-    print ("Best fixed: %f"%max_util_hindsight)
-        # for now, we're not comparing with the continuous case
-    print ("Regret:%f"%(max_util_hindsight-sum(algo_util)))
     return (max_util_hindsight - sum(algo_util))
-
-
-
-
-def regret2(reward,alloc,bid_space,algo_util,T,num_auctions):
-    util = []
-    for b in range(0,bid_space):
-        s = 0
-        for t in range(0,T+1):
-            s += reward[t][b]*(alloc[t][b])
-        util.append(s)
-
-    max_util_hindsight = np.max(util)
-    print ("Algorithm's Utility: %f"%(sum(algo_util)))
-    print ("Best fixed: %f"%max_util_hindsight)
-        # for now, we're not comparing with the continuous case
-    print ("Regret:%f"%(max_util_hindsight-sum(algo_util)))
-    return (max_util_hindsight - sum(algo_util))
-
-
 
 

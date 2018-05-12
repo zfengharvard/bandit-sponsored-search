@@ -27,7 +27,6 @@ def set_auction_params(T,num_repetitions):
     values = [[np.random.uniform(0,1) for j in range(0,num_bidders)] for _ in range(0,T)]
     # threshold ctr to decide whether or you get clicked or not
     threshold = [np.random.uniform(0,1) for _ in range(0,T)]
-    #threshold = np.random.binomial(1,0.5,T)
 
     # gaussian noise on all timesteps on all slots
     # we assume that the last slot + 1 corresponds to the "no-allocation" case

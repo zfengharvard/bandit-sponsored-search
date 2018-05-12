@@ -1,6 +1,6 @@
 from bidder import *
 from copy import deepcopy
-from master_file import  regret_winexp, regret_exp3, regret_gexp3
+from master_file import  regret_winexp, regret_exp3
 from auction_parameters import set_auction_params
 import matplotlib
 import matplotlib.pyplot as plt
@@ -66,6 +66,4 @@ plt.legend(loc='best')
 plt.xlabel('number of rounds')
 plt.ylabel('regret')
 plt.title('Regret Performance of WIN-EXP vs EXP3')
-plt.savefig('oblivious_01.png')
-#plt.savefig('exp3.png')
-#plt.show()
+plt.savefig('ob_regression.png')

@@ -41,7 +41,7 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
         bidder.payment[t]   = gsp_instance.pay_func(bidder.id, currbid_cpy[t])
         clean_alloc[t]      = [gsp_instance.alloc_func(bidder.id, b*bidder.eps) for b in range(0,bidder.bid_space)]        
         bidder.pay_func[t]  = [gsp_instance.pay_func(bidder.id, b*bidder.eps) for b in range(0,bidder.bid_space)]     
-        bidder.alloc_func[t] = clean_alloc[t]
+        bidder.alloc_func[t] = deepcopy(clean_alloc[t])
 
         arm_chosen = int(math.ceil(bids[t][0]/bidder.eps))
         #reward function: value - payment(coming from GSP module)
@@ -50,14 +50,13 @@ def main_exp3(bidder,curr_rep, T,num_bidders, num_slots, outcome_space, rank_sco
         else:
             bidder.reward_func[t] = [0 for _ in range(0,bidder.bid_space)]
 
-        #bidder.utility[t] = [bidder.reward_func[t][b] - 1 for b in range(0,bidder.bid_space)] 
-        bidder.utility[t] = normalize(bidder.reward_func[t],bidder.bid_space,0,1)
+        bidder.utility[t] = bidder.reward_func[t]
 
         #weights update
         
         if bidder.pi[arm_chosen] < 0.0000000001:
             bidder.pi[arm_chosen] = 0.0000000001
-        estimated_loss = bidder.utility[t][arm_chosen]/bidder.pi[arm_chosen]
+        estimated_loss = -bidder.utility[t][arm_chosen]/bidder.pi[arm_chosen]
         bidder.loss[arm_chosen] += estimated_loss
         arr = np.array([(-bidder.eta_exp3)*bidder.loss[b] for b in range(0,bidder.bid_space)], dtype=np.float128)
         bidder.weights = np.exp(arr)
