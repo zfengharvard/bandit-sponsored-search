@@ -1,6 +1,6 @@
 # Learning to Bid without Knowing your Value
 
-Code for reproducing experimental results from our paper: \<place link to paper here once all results are ready\>
+Code for reproducing experimental results from our paper: https://arxiv.org/pdf/1711.01333.pdf.
 
 ### Prerequisites
 
