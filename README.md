@@ -10,7 +10,7 @@ Code for reproducing experimental results from our paper: https://arxiv.org/pdf/
 
 ## Implementation
 
-Folders for different simulations with oblivious adveraries, adaptive adversaries using EXP3 and adaptive adversaries using WINEXP. In order to run each simulation: 
+Folders for different simulations with oblivious adveraries (stochastic opponents), adaptive adversaries using EXP3 and adaptive adversaries using WINEXP. In order to run each simulation: 
 ```
 python runner-dp.py
 ```
